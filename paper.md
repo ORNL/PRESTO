@@ -94,9 +94,9 @@ We conducted experiments to evaluate the effectiveness of our approach.
 
 ### Energy Consumption with Fixed epsilon = 1
 1. The best algorithm for a given epsion ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](fixedeps.png)
-Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}<br>
+Best by Similarity:  {'algorithm': 'PercentilePrivacy', 'score': np.float32(0.9841)}<br>
 Best by Reliability: {'algorithm': 'PercentilePrivacy', 'score': inf}<br>
-Best by Similarity:  {'algorithm': 'PercentilePrivacy', 'score': np.float32(0.9841)} 
+Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}<br>
 
 ### ML Classification with Private Gradients
 Baseline Accuracy (no privacy): 93.00%<br>
