@@ -74,12 +74,12 @@ We conducted experiments to evaluate the effectiveness of our approach.
 1. Privacy loss (epsilon) vs utility (RMSE) for selected/prefered privacy algorithms ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](finance.png)
 
 ### Energy Consumption with Fixed epsilon = 1
-Best by Similarity:  {'algorithm': 'PercentilePrivacy', 'score': np.float32(0.9841)} \\
-Best by Reliability: {'algorithm': 'PercentilePrivacy', 'score': inf}
-Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}
+Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}<br>
+Best by Reliability: {'algorithm': 'PercentilePrivacy', 'score': inf}<br>
+Best by Similarity:  {'algorithm': 'PercentilePrivacy', 'score': np.float32(0.9841)} 
 
 ### ML Classification with Private Gradients
-Baseline Accuracy (no privacy): 93.00%
+Baseline Accuracy (no privacy): 93.00%<br>
 DP Accuracy with 'PercentilePrivacy': 94.00%
 
 # Conclusion
