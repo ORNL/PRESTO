@@ -60,11 +60,10 @@ data = torch.tensor(consumption, dtype=torch.float32)
 # 2) Visualize original time series distribution
 visualize_data(data, title="Original Energy Consumption Distribution")
 
-# 3) Recommend top-3 privacy algorithms for ε = 1.0
-epsilon = 1.0
+# 3) Recommend top-3 privacy algorithms
 top3 = recommend_top3(data, n_evals=5, init_points=3, n_iter=10)
 
-print("Top-3 recommended privacy algorithms for energy data (ε=1.0):")
+print("Top-3 recommended privacy algorithms for energy data:")
 for rank, rec in enumerate(top3, start=1):
     print(f"{rank}. {rec['algorithm']} | ε={rec['epsilon']:.2f} | score={rec['score']:.4f} "
           f"| mean_rmse={rec['mean']:.4f} | ci_width={rec['ci_width']:.4f} | rel={rec['reliability']:.2f}")
@@ -94,10 +93,12 @@ for rec in top3:
 For more examples see the Tutorial folder, there are examples using real-world datasets for electric grid and medical domains.
 
 ## Experimental Results
-Top-3 recommended privacy algorithms for energy data (ε=1.0):
+Top-3 recommended privacy algorithms for energy data:
 1. DP_Exponential | ε=4.87 | score=-0.2798 | mean_rmse=0.2812 | ci_width=0.0283 | rel=125.66
 2. DP_Laplace | ε=4.55 | score=-0.2916 | mean_rmse=0.3155 | ci_width=0.0455 | rel=69.66
 3. DP_Gaussian | ε=4.88 | score=-0.6738 | mean_rmse=0.6944 | ci_width=0.0524 | rel=27.48
+
+Visualization of original, private, and similarity metrics ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](all_top_dp.png)
 
 ## API Reference
 
