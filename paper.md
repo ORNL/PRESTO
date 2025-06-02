@@ -64,14 +64,17 @@ PRESTO advances the state of the art by unifying statistical dataset analysis, B
 # Experiments
 We conducted experiments to evaluate the effectiveness of our approach.
 
-### Energy Time‐Series with Bayesian Optimization (Dataset: Hourly Consumption (Min))
+### Energy Compumtion with Bayesian Optimization (Dataset: Hourly Consumption (Min))
 1. Privacy loss (epsilon) vs utility (RMSE) for selected/prefered privacy algorithms ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](energy.png)
 
-### Medical Time‐Series with Bayesian Optimization (Dataset: Heart Rate (Min))
+### Medical Measuments with Bayesian Optimization (Dataset: Heart Rate (Min))
 1. Privacy loss (epsilon) vs utility (RMSE) for selected/prefered privacy algorithms ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](medical.png)
 
-### Finance Time‐Series with Bayesian Optimization (Dataset: Payment Transactions (Min))
+### Finance Transactions with Bayesian Optimization (Dataset: Payment Transactions (Min))
 1. Privacy loss (epsilon) vs utility (RMSE) for selected/prefered privacy algorithms ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](finance.png)
+
+### Sensor Temperature Time‐Series with Bayesian Optimization (Dataset: Payment Transactions (Min))
+1. Privacy loss (epsilon) vs utility (RMSE) for selected/prefered privacy algorithms ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](temp.png)
 
 ### Energy Consumption with Fixed epsilon = 1
 Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}<br>
