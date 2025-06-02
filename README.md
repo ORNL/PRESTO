@@ -4,6 +4,7 @@ PRESTO: Privacy REcommendation and SecuriTy Optimization is a Python package tha
 ## Summary
 This package includes functions for:
 - Defines reliability, confidence, and similarity score.
+- Modular solution so new privacy preservation algorithms or privacy preservation library can be easily integrated.
 - Determines the best algorithm, privacy loss, confidence interval, reliability using Bayesian Optimization.
 - Recommends the best privacy preservation algorithms for a given dataset and user requirements.
 - Calculate the privacy-utility, similarity and reliability score.
@@ -11,6 +12,7 @@ This package includes functions for:
 - Visualize the top 3 algorithms and their confidence intervals.
 - Visualize the original and private datasets.
 - Visualize the similarity between the datasets and reliability score.
+- Integration with existing privacy preservation libraries (e.g., Opacus) for finding the optimal parameters.
 
 ## Installation
 You can install the package directly from PyPI:
