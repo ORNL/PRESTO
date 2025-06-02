@@ -102,6 +102,9 @@ Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}<br>
 Baseline Accuracy (no privacy): 93.00%<br>
 DP Accuracy with 'PercentilePrivacy': 94.00%
 
+### ML Classification with Private Gradients
+1. Pareto front for privacy budget vs accuracy ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](pareto_front.png)
+
 # Conclusion
 PRESTO delivers a data-driven, automated, and extensible framework for differential-privacy mechanism selection and tuning. By profiling statistical properties, optimizing ε via Bayesian methods, and quantifying both utility and uncertainty, PRESTO guides users to the privacy solution best suited for their data. Its modular design allows seamless integration of new algorithms and metrics, positioning PRESTO as a flexible platform for both practitioners and researchers aiming to embed privacy guarantees in diverse analytical workflows.
 
