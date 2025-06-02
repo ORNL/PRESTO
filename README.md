@@ -95,8 +95,8 @@ For more examples see the Tutorial folder, there are examples using real-world d
 
 ## Experimental Results
 Top-3 recommended privacy algorithms for energy data (ε=1.0):
-1. PercentilePrivacy | ε=2.14 | score=-3.2459 | mean_rmse=3.2459 | ci_width=0.0000 | rel=inf
-2. SVT_AboveThreshold | ε=0.10 | score=-1.4181 | mean_rmse=1.4513 | ci_width=0.1917 | rel=3.59
+1. DP_Exponential | ε=4.87 | score=-0.2798 | mean_rmse=0.2812 | ci_width=0.0283 | rel=125.66
+2. DP_Laplace | ε=4.55 | score=-0.2916 | mean_rmse=0.3155 | ci_width=0.0455 | rel=69.66
 3. DP_Gaussian | ε=4.88 | score=-0.6738 | mean_rmse=0.6944 | ci_width=0.0524 | rel=27.48
 
 ## API Reference
