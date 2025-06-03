@@ -1,3 +1,5 @@
+![# PRESTO](PRESTO-logo-tagline-no-bg.png)
+
 # PRESTO
 PRESTO: Privacy REcommendation and SecuriTy Optimization is a Python package that provides recomendation for the best privacy preservation algorithm based on user preferences. Traditional privacy preservation libraries provide an implementation of a set of algorithms but the user need to experiment and detemine which of them is the best for the given dataset.
 
