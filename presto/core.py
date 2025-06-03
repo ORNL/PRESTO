@@ -25,11 +25,6 @@ Desired Metrics:
     Reliability is computed as 1 / (RMSE × CI width); higher values (e.g., >10) suggest a reliable and stable privacy-utility trade-off.
 """
 
-get_ipython().system('pip install bayesian-optimization')
-get_ipython().system('pip install gpytorch')
-get_ipython().system('pip install opacus')
-get_ipython().system('pip install GPy')
-
 import math
 import torch
 import random
@@ -73,62 +68,61 @@ print(f"Using device: {device}")
 
 
 def numpy_to_list(nd_array):
-"""
-    Converts a PyTorch tensor to a flattened Python list using NumPy.
-
-    Args:
-        nd_array (torch.Tensor): A PyTorch tensor (any shape, assumed to be on CPU or GPU).
-
-    Returns:
-        list: A flattened list of tensor values.
-"""
+    """
+        Converts a PyTorch tensor to a flattened Python list using NumPy.
+    
+        Args:
+            nd_array (torch.Tensor): A PyTorch tensor (any shape, assumed to be on CPU or GPU).
+    
+        Returns:
+            list: A flattened list of tensor values.
+    """
     return nd_array.cpu().numpy().flatten().tolist()
 
 
 def _to_tensor(data):
-"""
-    Ensures input is a PyTorch tensor. If it's not, converts it using float32 precision.
-
-    Args:
-        data (list, np.ndarray, or torch.Tensor): The input data to convert.
-
-    Returns:
-        torch.Tensor: The input as a torch tensor with dtype=float32.
-"""
+    """
+        Ensures input is a PyTorch tensor. If it's not, converts it using float32 precision.
+    
+        Args:
+            data (list, np.ndarray, or torch.Tensor): The input data to convert.
+    
+        Returns:
+            torch.Tensor: The input as a torch tensor with dtype=float32.
+    """
     if not torch.is_tensor(data):
         return torch.as_tensor(data, dtype=torch.float32)
     return data
 
 
 def type_checking_and_return_lists(domain):
-"""
-    Converts a list, numpy array, or tensor to a flattened list and captures its original shape.
-
-    Args:
-        domain (list, np.ndarray, or torch.Tensor): Input data to be flattened.
-
-    Returns:
-        tuple:
-            - list: Flattened data as a list.
-            - tuple: Original shape of the input data.
-"""
+    """
+        Converts a list, numpy array, or tensor to a flattened list and captures its original shape.
+    
+        Args:
+            domain (list, np.ndarray, or torch.Tensor): Input data to be flattened.
+    
+        Returns:
+            tuple:
+                - list: Flattened data as a list.
+                - tuple: Original shape of the input data.
+    """
     arr = np.array(domain)
     return arr.flatten().tolist(), arr.shape
 
 
 def type_checking_return_actual_dtype(domain, data_list, shape):
-
-"""
-    Reconstructs the original structure and type of a dataset from a flat list.
-
-    Args:
-        domain (list, np.ndarray, or torch.Tensor): Original data used to infer target type and shape.
-        data_list (list): Flattened list of privatized or transformed values.
-        shape (tuple): Original shape to reshape the flat list into.
-
-    Returns:
-        torch.Tensor or list: Data reshaped and converted back to match the original input type.
-"""
+    """
+        Reconstructs the original structure and type of a dataset from a flat list.
+    
+        Args:
+            domain (list, np.ndarray, or torch.Tensor): Original data used to infer target type and shape.
+            data_list (list): Flattened list of privatized or transformed values.
+            shape (tuple): Original shape to reshape the flat list into.
+    
+        Returns:
+            torch.Tensor or list: Data reshaped and converted back to match the original input type.
+    """
     arr = np.array(data_list).reshape(shape)
     if isinstance(domain, torch.Tensor):
         return torch.from_numpy(arr).to(dtype=domain.dtype, device=domain.device)
@@ -136,17 +130,17 @@ def type_checking_return_actual_dtype(domain, data_list, shape):
 
 
 def applyDPGaussian(domain, sensitivity=1, delta=1e-5, epsilon=1, gamma=1):
-"""
-    Parameters:
-        domain ([type]): Description.
-        sensitivity=1 ([type]): Description.
-        delta=1e-5 ([type]): Description.
-        epsilon=1 ([type]): Description.
-        gamma=1 ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            domain ([type]): Description.
+            sensitivity=1 ([type]): Description.
+            delta=1e-5 ([type]): Description.
+            epsilon=1 ([type]): Description.
+            gamma=1 ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     data, shape = type_checking_and_return_lists(domain)
     sigma = np.sqrt(sensitivity * np.log(1.25 / delta)) * gamma / epsilon
@@ -155,16 +149,16 @@ def applyDPGaussian(domain, sensitivity=1, delta=1e-5, epsilon=1, gamma=1):
 
 
 def applyDPExponential(domain, sensitivity=1, epsilon=1, gamma=1.0):
-"""
-    Parameters:
-        domain ([type]): Description.
-        sensitivity=1 ([type]): Description.
-        epsilon=1 ([type]): Description.
-        gamma=1.0 ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            domain ([type]): Description.
+            sensitivity=1 ([type]): Description.
+            epsilon=1 ([type]): Description.
+            gamma=1.0 ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     data, shape = type_checking_and_return_lists(domain)
     scale = sensitivity * gamma / epsilon
@@ -175,16 +169,16 @@ def applyDPExponential(domain, sensitivity=1, epsilon=1, gamma=1.0):
 
 
 def applyDPLaplace(domain, sensitivity=1, epsilon=1, gamma=1):
-"""
-    Parameters:
-        domain ([type]): Description.
-        sensitivity=1 ([type]): Description.
-        epsilon=1 ([type]): Description.
-        gamma=1 ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            domain ([type]): Description.
+            sensitivity=1 ([type]): Description.
+            epsilon=1 ([type]): Description.
+            gamma=1 ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     data, shape = type_checking_and_return_lists(domain)
     noise = np.random.laplace(0, sensitivity * gamma / epsilon, size=len(data))
@@ -193,16 +187,16 @@ def applyDPLaplace(domain, sensitivity=1, epsilon=1, gamma=1):
 
 
 def above_threshold_SVT(val, domain_list, T, epsilon):
-"""
-    Parameters:
-        val ([type]): Description.
-        domain_list ([type]): Description.
-        T ([type]): Description.
-        epsilon ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            val ([type]): Description.
+            domain_list ([type]): Description.
+            T ([type]): Description.
+            epsilon ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     T_hat = T + np.random.laplace(0, 2/epsilon)
     nu_i = np.random.laplace(0, 4/epsilon)
@@ -212,19 +206,13 @@ def above_threshold_SVT(val, domain_list, T, epsilon):
 
 
 def applySVTAboveThreshold_full(domain, epsilon):
-"""
-    [Description of what the function does.]
-
-    Parameters:
-        domain ([type]): Description.
-        epsilon ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
-
     """
-    Applies Sparse Vector Technique (Above Threshold) across dataset using threshold=T=mean(domain).
+        Parameters:
+            domain ([type]): Description.
+            epsilon ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
     """
     data_list, shape = type_checking_and_return_lists(domain)
     T = np.mean(data_list)
@@ -233,14 +221,14 @@ def applySVTAboveThreshold_full(domain, epsilon):
 
 
 def percentilePrivacy(domain, percentile=50):
-"""
-    Parameters:
-        domain ([type]): Description.
-        percentile=50 ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            domain ([type]): Description.
+            percentile=50 ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     if not 0 <= percentile <= 100:
         raise ValueError("percentile must be between 0 and 100.")
@@ -326,13 +314,12 @@ def rappor(data, epsilon: float, m: int = 16, k: int = 2) -> torch.Tensor:
 
 
 def get_noise_generators():
-"""
-    Parameters:
-
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     return {
         "DP_Gaussian": lambda d, epsilon, **kw: applyDPGaussian(d, delta=kw.get('delta',1e-5), epsilon=epsilon, gamma=kw.get('gamma',1)),
@@ -347,28 +334,23 @@ def get_noise_generators():
     }
 
 
-NOISE_GENERATORS = get_noise_generators()
-
-
 def calculate_utility_privacy_score(domain, key, epsilon, **params):
-"""
-    [Description of what the function does.]
-
-    Parameters:
-        domain ([type]): Description.
-        key ([type]): Description.
-        epsilon ([type]): Description.
-        **params ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            domain ([type]): Description.
+            key ([type]): Description.
+            epsilon ([type]): Description.
+            **params ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     # Convert original domain to flat list
     data_list, _ = type_checking_and_return_lists(domain)
 
-    # Apply the selected privacy mechanism from NOISE_GENERATORS
-    privatized = NOISE_GENERATORS[key](domain, **{**params, 'epsilon': epsilon})
+    # Apply the selected privacy mechanism from get_noise_generators()
+    privatized = get_noise_generators()[key](domain, **{**params, 'epsilon': epsilon})
 
     # Convert privatized output to flat list
     priv_list, _ = type_checking_and_return_lists(privatized)
@@ -381,17 +363,17 @@ def calculate_utility_privacy_score(domain, key, epsilon, **params):
 
 
 def evaluate_algorithm_confidence(domain, key, epsilon, n_evals=10, **params):
-"""
-    Parameters:
-        domain ([type]): Description.
-        key ([type]): Description.
-        epsilon ([type]): Description.
-        n_evals=10 ([type]): Description.
-        **params ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            domain ([type]): Description.
+            key ([type]): Description.
+            epsilon ([type]): Description.
+            n_evals=10 ([type]): Description.
+            **params ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     # Run the utility score multiple times (abs(-RMSE) → RMSE)
     scores = [abs(calculate_utility_privacy_score(domain, key, epsilon, **params)) for _ in range(n_evals)]
@@ -413,13 +395,13 @@ def evaluate_algorithm_confidence(domain, key, epsilon, n_evals=10, **params):
 
 
 def performance_explanation_metrics(metrics):
-"""
-    Parameters:
-        metrics ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            metrics ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     rmse = metrics['mean']
     width = metrics['ci_upper'] - metrics['ci_lower']
@@ -438,18 +420,18 @@ def performance_explanation_metrics(metrics):
 
 
 def recommend_top3(domain, n_evals=5, init_points=2, n_iter=5):
-"""
-    Parameters:
-        domain ([type]): Description.
-        n_evals=5 ([type]): Description.
-        init_points=2 ([type]): Description.
-        n_iter=5 ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
-
+    """
+        Parameters:
+            domain ([type]): Description.
+            n_evals=5 ([type]): Description.
+            init_points=2 ([type]): Description.
+            n_iter=5 ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
     results = []
+    NOISE_GENERATORS = get_noise_generators()
 
     for key in NOISE_GENERATORS:
         # Objective: maximize negative RMSE (i.e., minimize RMSE)
@@ -496,16 +478,14 @@ def recommend_top3(domain, n_evals=5, init_points=2, n_iter=5):
 
 
 def visualize_data(domain, title="Data Distribution"):
-"""
-    [Description of what the function does.]
-
-    Parameters:
-        domain ([type]): Description.
-        title="Data Distribution" ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            domain ([type]): Description.
+            title="Data Distribution" ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     arr = np.array(domain)
     plt.figure(figsize=(12,6))
@@ -514,18 +494,16 @@ def visualize_data(domain, title="Data Distribution"):
 
 
 def visualize_similarity(domain, key, epsilon, **params):
-"""
-    [Description of what the function does.]
-
-    Parameters:
-        domain ([type]): Description.
-        key ([type]): Description.
-        epsilon ([type]): Description.
-        **params ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            domain ([type]): Description.
+            key ([type]): Description.
+            epsilon ([type]): Description.
+            **params ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     """
     Computes similarity metrics between original and privatized data and
@@ -541,6 +519,7 @@ def visualize_similarity(domain, key, epsilon, **params):
     - **params : any additional arguments for the noise function
     """
     # Generate private data
+    NOISE_GENERATORS = get_noise_generators()
     priv = NOISE_GENERATORS[key](domain, epsilon, **params)
 
     # Convert to numpy arrays
@@ -587,13 +566,13 @@ def visualize_similarity(domain, key, epsilon, **params):
 
 # Visualize top-3 recommendations
 def visualize_top3(recommendations):
-"""
-    Parameters:
-        recommendations ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            recommendations ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     labels = [f"{r['algorithm']}\nε={r['epsilon']:.2f}\nmean={r['mean']:.2f}\nwidth={r['ci_width']:.2f}" for r in recommendations]
     scores = [r['score'] for r in recommendations]
@@ -606,17 +585,17 @@ def visualize_top3(recommendations):
 
 # Visualize confidence for top algorithm. Desired: narrow error bars indicating small CI.
 def visualize_confidence(domain, key, epsilon, n_evals=10, **params):
-"""
-    Parameters:
-        domain ([type]): Description.
-        key ([type]): Description.
-        epsilon ([type]): Description.
-        n_evals=10 ([type]): Description.
-        **params ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            domain ([type]): Description.
+            key ([type]): Description.
+            epsilon ([type]): Description.
+            n_evals=10 ([type]): Description.
+            **params ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     res = evaluate_algorithm_confidence(domain, key, epsilon, n_evals, **params)
     mean, lower, upper = res['mean'], res['ci_lower'], res['ci_upper']
@@ -628,15 +607,15 @@ def visualize_confidence(domain, key, epsilon, n_evals=10, **params):
 
 # Confidence visualization for Top-3 Mechanisms.
 def visualize_confidence_top3(domain, recommendations, n_evals=10):
-"""
-    Parameters:
-        domain ([type]): Description.
-        recommendations ([type]): Description.
-        n_evals=10 ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            domain ([type]): Description.
+            recommendations ([type]): Description.
+            n_evals=10 ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     """
     Visualizes 95% confidence intervals for each algorithm in recommendations.
@@ -662,20 +641,21 @@ def visualize_confidence_top3(domain, recommendations, n_evals=10):
 
 # Combined overlay plot
 def visualize_overlay_original_and_private(domain, top3):
-"""
-    Parameters:
-        domain ([type]): Description.
-        top3 ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            domain ([type]): Description.
+            top3 ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     arr_orig = np.array(domain)
     plt.figure(figsize=(10,6))
     sns.kdeplot(arr_orig, label='Original', fill=False)
     for rec in top3:
         key, eps = rec['algorithm'], rec['epsilon']
+        NOISE_GENERATORS = get_noise_generators()
         priv = NOISE_GENERATORS[key](domain, eps)
         arr_priv = np.array(priv)
         sns.kdeplot(arr_priv, label=f"{key} ε={eps:.4f}", fill=False)
@@ -769,14 +749,14 @@ def recommend_best_algorithms(
     return winners
 
 def dp_function(noise_multiplier, max_grad_norm):
-"""
-    Parameters:
-        noise_multiplier ([type]): Description.
-        max_grad_norm ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            noise_multiplier ([type]): Description.
+            max_grad_norm ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     privacy_engine = PrivacyEngine()
     # Instantiate the model, loss function, and optimizer
@@ -797,17 +777,17 @@ def dp_function(noise_multiplier, max_grad_norm):
 
 
 def dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_test):
-"""
-    Parameters:
-        model ([type]): Description.
-        optimizer ([type]): Description.
-        criterion ([type]): Description.
-        train_dataloader ([type]): Description.
-        X_test ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            model ([type]): Description.
+            optimizer ([type]): Description.
+            criterion ([type]): Description.
+            train_dataloader ([type]): Description.
+            X_test ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     # This code runs the DP-impacted model to compute the Accuracy
 
@@ -837,16 +817,14 @@ def dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_
 
 
 def dp_target(noise_multiplier, max_grad_norm):
-"""
-    [Description of what the function does.]
-
-    Parameters:
-        noise_multiplier ([type]): Description.
-        max_grad_norm ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            noise_multiplier ([type]): Description.
+            max_grad_norm ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     # apply DP to ML
     model, optimizer, criterion, train_dataloader, privacy_engine = dp_function(noise_multiplier, max_grad_norm)
@@ -856,14 +834,14 @@ def dp_target(noise_multiplier, max_grad_norm):
 
 
 def dp_function2(noise_multiplier, max_grad_norm):
-"""
-    Parameters:
-        noise_multiplier ([type]): Description.
-        max_grad_norm ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            noise_multiplier ([type]): Description.
+            max_grad_norm ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     privacy_engine = PrivacyEngine()
     # Instantiate the model, loss function, and optimizer
@@ -884,14 +862,14 @@ def dp_function2(noise_multiplier, max_grad_norm):
 
 
 def dp_target2(noise_multiplier, max_grad_norm):
-"""
-    Parameters:
-        noise_multiplier ([type]): Description.
-        max_grad_norm ([type]): Description.
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters:
+            noise_multiplier ([type]): Description.
+            max_grad_norm ([type]): Description.
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     # apply DP to ML
     model, optimizer, criterion, train_dataloader, privacy_engine = dp_function2(noise_multiplier, max_grad_norm)
@@ -901,12 +879,12 @@ def dp_target2(noise_multiplier, max_grad_norm):
 
 
 def dp_pareto_front():
-"""
-    Parameters:
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters: None
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     # delta is .1 below.
     delta = .1
@@ -962,13 +940,12 @@ def dp_pareto_front():
 
 
 def dp_pareto_front_LR():
-"""
-    Parameters:
-
-
-    Returns:
-        [type]: Description of the return value.
-"""
+    """
+        Parameters: None
+    
+        Returns:
+            [type]: Description of the return value.
+    """
 
     # delta is .1 below.
     delta = .1

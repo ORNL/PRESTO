@@ -2,29 +2,31 @@
 requires = ["setuptools>=42"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["tests"]
+
 [project]
-name = "PRESTO"
+name = "presto"
 version = "0.1.0"
 description = "A Python package for privacy preservation algorithm recomendation"
 readme = "README.md"
+requires-python = ">=3.7"
 license = { file = "LICENSE" }
 authors = [
   { name = "Olivera Kotevska", email = "kotevskao@ornl.gov" }
 ]
 dependencies = [
-  "math",
   "torch",
-  "random",
   "numpy",
   "seaborn",
   "pandas",
-  "hashlib",
   "scipy",
   "matplotlib",
-  "bayes_opt",
+  "bayesian-optimization",
   "GPy",
   "gpytorch",
-  "sklearn",
+  "scikit-learn",
   "opacus"
 ]
 
