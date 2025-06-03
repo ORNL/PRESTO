@@ -26,6 +26,10 @@ Desired Metrics:
 """
 
 get_ipython().system('pip install bayesian-optimization')
+get_ipython().system('pip install gpytorch')
+get_ipython().system('pip install opacus')
+get_ipython().system('pip install GPy')
+
 import math
 import torch
 import random
@@ -33,11 +37,26 @@ import numpy as np
 import seaborn as sns
 import pandas as pd, re
 from hashlib import sha256
-from scipy import stats as st
 import matplotlib.pyplot as plt
-from scipy.stats import ks_2samp, pearsonr
+
+import GPy
+import gpytorch
 from bayes_opt import BayesianOptimization
+
+from scipy import stats as st
+from scipy.stats import ks_2samp, pearsonr
 from scipy.spatial.distance import jensenshannon
+
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, TensorDataset
+torch.set_default_dtype(torch.float64)
+
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+
+from opacus.privacy_engine import PrivacyEngine
+
 
 SEED = 42
 random.seed(SEED)
@@ -748,39 +767,6 @@ def recommend_best_algorithms(
     plt.show()
 
     return winners
-
-
-# Libraries used for the machine learning part.
-get_ipython().system('pip install gpytorch')
-get_ipython().system('pip install opacus')
-get_ipython().system('pip install GPy')
-
-import GPy
-import gpytorch
-
-import math
-import numpy as np
-import random
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import DataLoader, TensorDataset
-torch.set_default_dtype(torch.float64)
-
-# import pandas as pd, re
-from scipy import stats as st
-from scipy.stats import ks_2samp, pearsonr
-from scipy.spatial.distance import jensenshannon
-
-from sklearn.datasets import make_classification
-from sklearn.model_selection import train_test_split
-
-import seaborn as sns
-import matplotlib.pyplot as plt
-from google.colab import drive
-
-from opacus.privacy_engine import PrivacyEngine
-
 
 def dp_function(noise_multiplier, max_grad_norm):
 """

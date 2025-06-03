@@ -1,4 +1,4 @@
-![# PRESTO](PRESTO-logo-tagline-no-bg.png)
+![# PRESTO](images/PRESTO-logo-tagline-no-bg.png)
 
 # PRESTO
 PRESTO: Privacy REcommendation and SecuriTy Optimization is a Python package that provides recomendation for the best privacy preservation algorithm based on user preferences. Traditional privacy preservation libraries provide an implementation of a set of algorithms but the user need to experiment and detemine which of them is the best for the given dataset.
@@ -100,7 +100,7 @@ Top-3 recommended privacy algorithms for energy data:
 2. DP_Laplace | ε=4.55 | score=-0.2916 | mean_rmse=0.3155 | ci_width=0.0455 | rel=69.66
 3. DP_Gaussian | ε=4.88 | score=-0.6738 | mean_rmse=0.6944 | ci_width=0.0524 | rel=27.48
 
-Visualization of original, private, and similarity metrics ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](all_top_dp.png)
+Visualization of original, private, and similarity metrics ![Visualization metrics](images/all_top_dp.png)
 
 ## API Reference
 
@@ -123,7 +123,7 @@ Visualization of original, private, and similarity metrics ![Feature MAE compari
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgements
-This material is based upon work supported by the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research under Contract No. DE-AC05-00OR22725. This manuscript has been authored by UT-Battelle, LLC under Contract No. DE-AC05-00OR22725 with the U.S. Department of Energy. The United States Government retains and the publisher, by accepting the article for publication, acknowledges that the United States Government retains a non-exclusive, paid-up, irrevocable, world-wide license to publish or reproduce the published form of this manuscript, or allow others to do so, for United States Government purposes. The Department of Energy will provide public access to these results of federally sponsored research in accordance with the DOE Public Access Plan (http://energy.gov/downloads/doe-public-access-plan).
+This material is based upon work supported by the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research under Contract No. DE-AC05-00OR22725. This manuscript has been co-authored by UT-Battelle, LLC under Contract No. DE-AC05-00OR22725 with the U.S. Department of Energy. The United States Government retains and the publisher, by accepting the article for publication, acknowledges that the United States Government retains a non-exclusive, paid-up, irrevocable, world-wide license to publish or reproduce the published form of this manuscript, or allow others to do so, for United States Government purposes. The Department of Energy will provide public access to these results of federally sponsored research in accordance with the DOE Public Access Plan (http://energy.gov/downloads/doe-public-access-plan).
 
 ## References
 Dwork, C., & Roth, A. (2014). The algorithmic foundations of differential privacy. Foundations and Trends® in Theoretical Computer Science, 9(3–4), 211-407.

@@ -65,35 +65,35 @@ PRESTO advances the state of the art by unifying statistical dataset analysis, B
 We conducted experiments to evaluate the effectiveness of our approach.
 
 ### Energy Compumtion with Bayesian Optimization (Dataset: Hourly Consumption (Min))
-1. Privacy loss (epsilon) vs utility (RMSE) for selected/prefered privacy algorithms ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](energy.png)
+1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](images/energy.png)
 2. Top-3 Recommendations:
    DP_Laplace: ε=3.6277, mean_rmse=0.3817, ci_width=0.0279, reliability=93.90<br>
    DP_Exponential: ε=3.6300, mean_rmse=0.3835, ci_width=0.0416, reliability=62.68<br>
    DP_Gaussian: ε=4.1687, mean_rmse=0.8326, ci_width=0.0525, reliability=22.88<br>
 
 ### Medical Measuments with Bayesian Optimization (Dataset: Heart Rate (Min))
-1. Privacy loss (epsilon) vs utility (RMSE) for selected/prefered privacy algorithms ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](medical.png)
+1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](images/medical.png)
 2. Top-3 Recommendations:
    DP_Laplace: ε=3.6254, mean_rmse=0.3901, ci_width=0.0054, reliability=474.71<br>
    DP_Exponential: ε=3.6319, mean_rmse=0.3916, ci_width=0.0051, reliability=500.71<br>
    DP_Gaussian: ε=5.0000, mean_rmse=0.6824, ci_width=0.0047, reliability=311.79<br>
 
 ### Finance Transactions with Bayesian Optimization (Dataset: Payment Transactions (Min))
-1. Privacy loss (epsilon) vs utility (RMSE) for selected/prefered privacy algorithms ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](finance.png)
+1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](images/finance.png)
 2. Top-3 Recommendations:
    DP_Laplace: ε=4.1687, mean_rmse=0.3461, ci_width=0.0340, reliability=84.98<br>
    DP_Exponential: ε=3.6296, mean_rmse=0.3864, ci_width=0.0453, reliability=57.13<br>
    DP_Gaussian: ε=4.1690, mean_rmse=0.8270, ci_width=0.0560, reliability=21.59<br>
 
 ### Sensor Temperature Time‐Series with Bayesian Optimization (Dataset: Payment Transactions (Min))
-1. Privacy loss (epsilon) vs utility (RMSE) for selected/prefered privacy algorithms ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](temp.png)
+1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](images/temp.png)
 2. Top-3 Recommendations:
    DP_Laplace: ε=3.6296, mean_rmse=0.3846, ci_width=0.0126, reliability=206.36<br>
    DP_Exponential: ε=3.6296, mean_rmse=0.3883, ci_width=0.0187, reliability=137.72<br>
    DP_Gaussian: ε=3.6296, mean_rmse=0.9459, ci_width=0.0334, reliability=31.65<br>
 
 ### Energy Consumption with Fixed epsilon = 1
-1. The best algorithm for a given epsion ![Feature MAE comparison for MIC-DP vs. state-of-art approaches](fixedeps.png)
+1. The best algorithm for a given epsilon ![The best algorithm for a given epsilon](images/fixedeps.png)
 Best by Similarity:  {'algorithm': 'PercentilePrivacy', 'score': np.float32(0.9841)}<br>
 Best by Reliability: {'algorithm': 'PercentilePrivacy', 'score': inf}<br>
 Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}<br>
@@ -104,7 +104,7 @@ DP Accuracy with 'PercentilePrivacy': 94.00%
 
 ### ML Classification with Private Gradients
 1. Pareto front for privacy budget vs accuracy  
-   <img src="pareto_front.png" alt="Feature MAE comparison for MIC-DP vs. state-of-art approaches" width="400">
+   <img src="images/pareto_front.png" alt="Pareto front for privacy budget vs accuracy" width="400">
 
 # Conclusion
 PRESTO delivers a data-driven, automated, and extensible framework for differential-privacy mechanism selection and tuning. By profiling statistical properties, optimizing ε via Bayesian methods, and quantifying both utility and uncertainty, PRESTO guides users to the privacy solution best suited for their data. Its modular design allows seamless integration of new algorithms and metrics, positioning PRESTO as a flexible platform for both practitioners and researchers aiming to embed privacy guarantees in diverse analytical workflows.
