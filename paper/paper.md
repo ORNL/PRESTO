@@ -59,9 +59,10 @@ PRESTO advances the state of the art by unifying statistical dataset analysis, B
 4. **Confidence & Reliability**  
    - Compute a 95% confidence interval on RMSE at the optimal ε*, then define  
      $$
-     \mathrm{Reliability}
-     = \frac{1}{\text{Mean RMSE}\,\times\,\text{CI Width}}.
-     $$ 
+      \mathrm{Reliability}
+      = \frac{1}{\text{Mean RMSE}\times \text{CI Width}}.
+     $$
+     
 5. **Similarity Assessment**  
    - Measure distributional similarity via Kolmogorov–Smirnov, Jensen–Shannon, Pearson correlation.  
 6. **Multi‐Objective Ranking**  
@@ -116,7 +117,9 @@ DP Accuracy with 'PercentilePrivacy': 94.00%
 
 1. Pareto front for privacy budget vs accuracy
 
-![Pareto front for privacy budget vs accuracy](../images/pareto_front.png){ width=300px }
+<p align="center">
+  <img src="../images/pareto_front.png" alt="Pareto front for privacy budget vs accuracy" width="300px"/>
+</p>
 
 
 # Conclusion
