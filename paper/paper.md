@@ -45,23 +45,31 @@ PRESTO advances the state of the art by unifying statistical dataset analysis, B
    - Compute descriptive (mean, variance, skewness, kurtosis) and, for categorical data, domain‐size and frequency distributions.  
 2. **Mechanism Library**  
    - Maintain a dictionary of privacy functions (`get_noise_generators()`), each mapping `(data, ε) → privatized_data`.  
-3. **Bayesian Optimization of ε**  
-   - For each mechanism, define  
-     $$
-     f(\varepsilon) = -\mathrm{RMSE}\bigl(\text{data},\,\text{mechanism}_\varepsilon(\text{data})\bigr)
-     $$  
-   - Maximize this over  
-     $$
-     \varepsilon \in [\varepsilon_{\min},\,\varepsilon_{\max}]
-     $$  
+3. **Bayesian Optimization of ε**
+
+   - For each mechanism, define:
+
+     \[
+       f(\varepsilon) = -\mathrm{RMSE}\bigl(\text{data},\,\text{mechanism}_\varepsilon(\text{data})\bigr)
+     \]
+
+   - Maximize this over:
+
+     \[
+       \varepsilon \in [\varepsilon_{\min},\,\varepsilon_{\max}]
+     \]
+
      using Gaussian‐process Bayesian optimization.
 
-4. **Confidence & Reliability**  
-   - Compute a 95% confidence interval on RMSE at the optimal ε*, then define  
-     $$
-      \mathrm{Reliability}
-      = \frac{1}{\text{Mean RMSE}\times \text{CI Width}}.
-     $$
+4. **Confidence & Reliability**
+
+   - Compute a 95% confidence interval on RMSE at the optimal ε*, then define:
+
+     \[
+       \mathrm{Reliability}
+       = \frac{1}{\text{Mean RMSE}\times \text{CI Width}}.
+     \]
+
      
 5. **Similarity Assessment**  
    - Measure distributional similarity via Kolmogorov–Smirnov, Jensen–Shannon, Pearson correlation.  
