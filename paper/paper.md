@@ -146,7 +146,7 @@ Top-3 Recommendations:
 
 ### ML Classification with Private Gradients
 
-![Pareto front for privacy budget vs accuracy](../images/pareto_front.png){ width=850px float=left }
+![Pareto front for privacy budget vs accuracy](../images/pareto_front.png){ width=650px float=left }
 
 
 # Conclusion
