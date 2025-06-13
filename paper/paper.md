@@ -1,8 +1,8 @@
 ---
-title: 'PRESTO: A Python package for recomending privacy preservation algorithm based on user preferences.'
+title: 'PRESTO: A Python package for recommending privacy preservation algorithm based on user preferences.'
 date: 26 May 2025
 bibliography: paper/paper.bib
----
+
 tags:
   - Python
   - differential privacy
@@ -48,7 +48,7 @@ PRESTO advances the state of the art by unifying statistical dataset analysis, B
 
 2. **Mechanism Library**
 
-    - Maintain a dictionary of privacy functions (`get_noise_generators()`), each mapping `(data, epsilon) → privatized_data`.
+    - Maintain a dictionary of privacy functions (`get_noise_generators()`), each mapping `(data, \varepsilon) → privatized_data`.
   
    
 3. **Bayesian Optimization of $\varepsilon$**
