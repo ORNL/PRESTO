@@ -92,30 +92,32 @@ We conducted experiments to evaluate the effectiveness of our approach.
 ### Energy Compumtion with Bayesian Optimization (Dataset: Hourly Consumption (Min))
 1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/energy.png)
 2. Top-3 Recommendations:
-   DP_Laplace: $\varepsilon$=3.6277, mean_rmse=0.3817, ci_width=0.0279, reliability=93.90<br>
-   DP_Exponential: $\varepsilon$=3.6300, mean_rmse=0.3835, ci_width=0.0416, reliability=62.68<br>
-   DP_Gaussian: $\varepsilon$=4.1687, mean_rmse=0.8326, ci_width=0.0525, reliability=22.88<br>
+   - **DP_Laplace:** $\varepsilon=3.6277$, mean_rmse=0.3817, ci_width=0.0279, reliability=93.90
+   - **DP_Exponential:** $\varepsilon=3.6300$, mean_rmse=0.3835, ci_width=0.0416, reliability=62.68
+   - **DP_Gaussian:** $\varepsilon=4.1687$, mean_rmse=0.8326, ci_width=0.0525, reliability=22.88
 
 ### Medical Measuments with Bayesian Optimization (Dataset: Heart Rate (Min))
 1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/medical.png)
 2. Top-3 Recommendations:
-   DP_Laplace: $\varepsilon$=3.6254, mean_rmse=0.3901, ci_width=0.0054, reliability=474.71<br>
-   DP_Exponential: $\varepsilon$=3.6319, mean_rmse=0.3916, ci_width=0.0051, reliability=500.71<br>
-   DP_Gaussian: $\varepsilon$=5.0000, mean_rmse=0.6824, ci_width=0.0047, reliability=311.79<br>
+   2. Top-3 Recommendations:
+
+    - **DP_Laplace:** $\varepsilon = 3.6254$, mean_rmse = 0.3901, ci_width = 0.0054, reliability = 474.71  
+    - **DP_Exponential:** $\varepsilon = 3.6319$, mean_rmse = 0.3916, ci_width = 0.0051, reliability = 500.71  
+    - **DP_Gaussian:** $\varepsilon = 5.0000$, mean_rmse = 0.6824, ci_width = 0.0047, reliability = 311.79  
 
 ### Finance Transactions with Bayesian Optimization (Dataset: Payment Transactions (Min))
 1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/finance.png)
 2. Top-3 Recommendations:
-   DP_Laplace: $\varepsilon$=4.1687, mean_rmse=0.3461, ci_width=0.0340, reliability=84.98<br>
-   DP_Exponential: $\varepsilon$=3.6296, mean_rmse=0.3864, ci_width=0.0453, reliability=57.13<br>
-   DP_Gaussian: $\varepsilon$=4.1690, mean_rmse=0.8270, ci_width=0.0560, reliability=21.59<br>
+   - **DP_Laplace:** $\varepsilon=4.1687$, mean_rmse=0.3461, ci_width=0.0340, reliability=84.98
+   - **DP_Exponential:** $\varepsilon=3.6296$, mean_rmse=0.3864, ci_width=0.0453, reliability=57.13
+   - **DP_Gaussian:** $\varepsilon=4.1690$, mean_rmse=0.8270, ci_width=0.0560, reliability=21.59
 
 ### Sensor Temperature Time‐Series with Bayesian Optimization (Dataset: Payment Transactions (Min))
 1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/energy.png)
 2. Top-3 Recommendations:
-   DP_Laplace: $\varepsilon$=3.6296, mean_rmse=0.3846, ci_width=0.0126, reliability=206.36<br>
-   DP_Exponential: $\varepsilon$=3.6296, mean_rmse=0.3883, ci_width=0.0187, reliability=137.72<br>
-   DP_Gaussian: $\varepsilon$=3.6296, mean_rmse=0.9459, ci_width=0.0334, reliability=31.65<br>
+   - **DP_Laplace:** $\varepsilon=3.6296$, mean_rmse=0.3846, ci_width=0.0126, reliability=206.36
+   - **DP_Exponential:** $\varepsilon=3.6296$, mean_rmse=0.3883, ci_width=0.0187, reliability=137.72
+   - **DP_Gaussian:** $\varepsilon=3.6296$, mean_rmse=0.9459, ci_width=0.0334, reliability=31.65
 
 ### Energy Consumption with Fixed epsilon = 1
 
@@ -123,21 +125,19 @@ We conducted experiments to evaluate the effectiveness of our approach.
 
 ![The best algorithm for a given epsilon](../images/fixedeps.png)
 
-Best by Similarity:  {'algorithm': 'PercentilePrivacy', 'score': np.float32(0.9841)}<br>
-Best by Reliability: {'algorithm': 'PercentilePrivacy', 'score': inf}<br>
-Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}<br>
+Best by Similarity:  {'algorithm': 'PercentilePrivacy', 'score': np.float32(0.9841)}
+Best by Reliability: {'algorithm': 'PercentilePrivacy', 'score': inf}
+Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}
 
 ### ML Classification with Private Gradients
-Baseline Accuracy (no privacy): 93.00%<br>
+Baseline Accuracy (no privacy): 93.00%
 DP Accuracy with 'PercentilePrivacy': 94.00%
 
 ### ML Classification with Private Gradients
 
 1. Pareto front for privacy budget vs accuracy
 
-![Pareto front for privacy budget vs accuracy](../images/pareto_front.png){ width=0.3\textwidth float=left }
-
-<div style="clear: both;"></div>
+![Pareto front for privacy budget vs accuracy](../images/pareto_front.png){ width=0.2\textwidth float=left }
 
 
 # Conclusion
