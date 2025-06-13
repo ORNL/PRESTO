@@ -90,7 +90,6 @@ PRESTO advances the state of the art by unifying statistical dataset analysis, B
 We conducted experiments to evaluate the effectiveness of our approach.
 
 ### Energy Compumtion with Bayesian Optimization (Dataset: Hourly Consumption (Min))
-1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms 
 
 ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/energy.png)
 
@@ -101,7 +100,6 @@ We conducted experiments to evaluate the effectiveness of our approach.
    - **DP_Gaussian:** $\varepsilon=4.1687$, mean_rmse=0.8326, ci_width=0.0525, reliability=22.88
 
 ### Medical Measuments with Bayesian Optimization (Dataset: Heart Rate (Min))
-1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms 
 
 ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/medical.png)
 
@@ -112,7 +110,6 @@ We conducted experiments to evaluate the effectiveness of our approach.
     - **DP_Gaussian:** $\varepsilon = 5.0000$, mean_rmse = 0.6824, ci_width = 0.0047, reliability = 311.79  
 
 ### Finance Transactions with Bayesian Optimization (Dataset: Payment Transactions (Min))
-1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms 
 
 ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/finance.png)
 
@@ -123,7 +120,6 @@ We conducted experiments to evaluate the effectiveness of our approach.
    - **DP_Gaussian:** $\varepsilon=4.1690$, mean_rmse=0.8270, ci_width=0.0560, reliability=21.59
 
 ### Sensor Temperature Time‐Series with Bayesian Optimization (Dataset: Payment Transactions (Min))
-1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms 
 
 ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/energy.png)
 
@@ -146,7 +142,7 @@ DP Accuracy with 'PercentilePrivacy': 94.00%
 
 ### ML Classification with Private Gradients
 
-![Pareto front for privacy budget vs accuracy](../images/pareto_front.png){ width=150px float=left }
+![Pareto front for privacy budget vs accuracy](../images/pareto_front.png){ width=450px float=left }
 
 
 # Conclusion
