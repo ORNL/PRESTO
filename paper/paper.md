@@ -47,16 +47,21 @@ PRESTO advances the state of the art by unifying statistical dataset analysis, B
    - Maintain a dictionary of privacy functions (`get_noise_generators()`), each mapping `(data, ε) → privatized_data`.  
 3. **Bayesian Optimization of ε**  
    - For each mechanism, define  
-     ```markdown
-      $$
-        f(\varepsilon) = -\mathrm{RMSE}\bigl(\text{data},\,\text{mechanism}_\varepsilon(\text{data})\bigr)
-      $$
-     and maximize over $\varepsilon \in [\varepsilon_{\min}, \,\varepsilon_{\max}]$ using Gaussian‐process Bayesian optimization.  
-4. **Confidence & Reliability**  
-   - Compute 95% CI on RMSE at ε*; define  
      $$
-      \mathrm{Reliability} \;=\; \frac{1}{\text{Mean RMSE}\times \text{CI Width}}.
+     f(\varepsilon) = -\mathrm{RMSE}\bigl(\text{data},\,\text{mechanism}_\varepsilon(\text{data})\bigr)
      $$  
+   - Maximize this over  
+     $$
+     \varepsilon \in [\varepsilon_{\min},\,\varepsilon_{\max}]
+     $$  
+     using Gaussian‐process Bayesian optimization.
+
+4. **Confidence & Reliability**  
+   - Compute a 95% confidence interval on RMSE at the optimal ε*, then define  
+     $$
+     \mathrm{Reliability}
+     = \frac{1}{\text{Mean RMSE}\,\times\,\text{CI Width}}.
+     $$ 
 5. **Similarity Assessment**  
    - Measure distributional similarity via Kolmogorov–Smirnov, Jensen–Shannon, Pearson correlation.  
 6. **Multi‐Objective Ranking**  
@@ -94,8 +99,11 @@ We conducted experiments to evaluate the effectiveness of our approach.
    DP_Gaussian: ε=3.6296, mean_rmse=0.9459, ci_width=0.0334, reliability=31.65<br>
 
 ### Energy Consumption with Fixed epsilon = 1
+
 1. The best algorithm for a given epsilon
+
 ![The best algorithm for a given epsilon](../images/fixedeps.png)
+
 Best by Similarity:  {'algorithm': 'PercentilePrivacy', 'score': np.float32(0.9841)}<br>
 Best by Reliability: {'algorithm': 'PercentilePrivacy', 'score': inf}<br>
 Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}<br>
@@ -105,8 +113,11 @@ Baseline Accuracy (no privacy): 93.00%<br>
 DP Accuracy with 'PercentilePrivacy': 94.00%
 
 ### ML Classification with Private Gradients
-1. Pareto front for privacy budget vs accuracy 
-![Pareto front for privacy budget vs accuracy](../images/pareto_front.png)
+
+1. Pareto front for privacy budget vs accuracy
+
+![Pareto front for privacy budget vs accuracy](../images/pareto_front.png){ width=300px }
+
 
 # Conclusion
 PRESTO delivers a data-driven, automated, and extensible framework for differential-privacy mechanism selection and tuning. By profiling statistical properties, optimizing ε via Bayesian methods, and quantifying both utility and uncertainty, PRESTO guides users to the privacy solution best suited for their data. Its modular design allows seamless integration of new algorithms and metrics, positioning PRESTO as a flexible platform for both practitioners and researchers aiming to embed privacy guarantees in diverse analytical workflows.
