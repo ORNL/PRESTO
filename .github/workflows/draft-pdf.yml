@@ -7,10 +7,10 @@ on:
     paths:
       - 'paper/**'
       - '.github/workflows/draft-pdf.yml'
-  workflow_dispatch:   # enables manual trigger
+  workflow_dispatch:
 
 permissions:
-  contents: write  # allow pushing updated PDF back to repo
+  contents: write
 
 jobs:
   build-pdf:
@@ -26,6 +26,11 @@ jobs:
         with:
           journal: joss
           paper-path: paper/paper.md
+
+      - name: Move PDF into paper folder
+        run: |
+          mkdir -p paper
+          mv paper.pdf paper/paper.pdf
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
