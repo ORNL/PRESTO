@@ -25,6 +25,7 @@ Desired Metrics:
     Reliability is computed as 1 / (RMSE × CI width); higher values (e.g., >10) suggest a reliable and stable privacy-utility trade-off.
 """
 
+# Import the required libraries.
 import math
 import torch
 import random
@@ -57,11 +58,11 @@ from sklearn.model_selection import train_test_split
 from opacus.privacy_engine import PrivacyEngine
 from opacus.utils.uniform_sampler import UniformWithReplacementSampler
 
+# Setup seed for reproducability purpose.
 SEED = 42
 random.seed(SEED)
 np.random.seed(SEED)
 torch.manual_seed(SEED)
-
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -69,6 +70,7 @@ if device.type == 'cuda':
     torch.cuda.manual_seed_all(SEED)
 
 print(f"Using device: {device}")
+
 
 class ExactGPModel(gpytorch.models.ExactGP):
     def __init__(self, train_x, train_y, likelihood):
@@ -82,7 +84,7 @@ class ExactGPModel(gpytorch.models.ExactGP):
         return gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
 
 
-# initialize likelihood and model
+# Initialize likelihood and model.
 def gpr_gpytorch(train_x, train_y, test_x, training_iter):
     train_x = torch.tensor(train_x)
     train_y = torch.tensor(train_y)
@@ -121,10 +123,9 @@ def gpr_gpytorch(train_x, train_y, test_x, training_iter):
     return f_mean, f_covar
 
 
+# Converts a PyTorch tensor to a flattened Python list using NumPy.
 def numpy_to_list(nd_array):
     """
-        Converts a PyTorch tensor to a flattened Python list using NumPy.
-    
         Args:
             nd_array (torch.Tensor): A PyTorch tensor (any shape, assumed to be on CPU or GPU).
     
@@ -134,10 +135,9 @@ def numpy_to_list(nd_array):
     return nd_array.cpu().numpy().flatten().tolist()
 
 
+# Ensures input is a PyTorch tensor. If it's not, converts it using float32 precision.
 def _to_tensor(data):
     """
-        Ensures input is a PyTorch tensor. If it's not, converts it using float32 precision.
-    
         Args:
             data (list, np.ndarray, or torch.Tensor): The input data to convert.
     
@@ -149,10 +149,9 @@ def _to_tensor(data):
     return data
 
 
+# Converts a list, numpy array, or tensor to a flattened list and captures its original shape.
 def type_checking_and_return_lists(domain):
     """
-        Converts a list, numpy array, or tensor to a flattened list and captures its original shape.
-    
         Args:
             domain (list, np.ndarray, or torch.Tensor): Input data to be flattened.
     
@@ -165,10 +164,9 @@ def type_checking_and_return_lists(domain):
     return arr.flatten().tolist(), arr.shape
 
 
+# Reconstructs the original structure and type of a dataset from a flat list.
 def type_checking_return_actual_dtype(domain, data_list, shape):
     """
-        Reconstructs the original structure and type of a dataset from a flat list.
-    
         Args:
             domain (list, np.ndarray, or torch.Tensor): Original data used to infer target type and shape.
             data_list (list): Flattened list of privatized or transformed values.
@@ -293,8 +291,15 @@ def percentilePrivacy(domain, percentile=50):
     return type_checking_return_actual_dtype(domain, result.tolist(), shape)
 
 
+# Perform Fast Walsh–Hadamard Transform (length must be power of two).
 def fwht(x: torch.Tensor) -> torch.Tensor:
-    """Perform Fast Walsh–Hadamard Transform (length must be power of two)."""
+    """
+        Parameters:
+            x ([type]): Description.
+    
+        Returns:
+            [type]: Description.
+    """
     h = 1
     y = x.clone()
     n = y.numel()
@@ -309,8 +314,8 @@ def fwht(x: torch.Tensor) -> torch.Tensor:
     return y
 
 
+# Histogram with Laplace noise, then mean estimation.
 def count_mean_sketch(data, epsilon: float, bins: int = 10) -> torch.Tensor:
-    """Histogram with Laplace noise, then mean estimation."""
     data = _to_tensor(data)
     min_val = float(data.min().item())
     max_val = float(data.max().item())
@@ -324,8 +329,8 @@ def count_mean_sketch(data, epsilon: float, bins: int = 10) -> torch.Tensor:
     return torch.full_like(data, mean_est)
 
 
+# Add Laplace noise in the Hadamard transform domain.
 def hadamard_mechanism(data, epsilon: float) -> torch.Tensor:
-    """Add Laplace noise in the Hadamard transform domain."""
     data = _to_tensor(data)
     n = data.numel()
     m = 1 << ((n - 1).bit_length())  # next power of two
@@ -339,8 +344,8 @@ def hadamard_mechanism(data, epsilon: float) -> torch.Tensor:
     return x_noisy[:n]
 
 
+# Local-DP via simplified randomized response over integer categories.
 def hadamard_response(data, epsilon: float) -> torch.Tensor:
-    """Local-DP via simplified randomized response over integer categories."""
     data = _to_tensor(data)
     d = int(data.max().item()) + 1
     p = math.exp(epsilon) / (math.exp(epsilon) + 1)
@@ -349,8 +354,8 @@ def hadamard_response(data, epsilon: float) -> torch.Tensor:
     return torch.where(flip.bool(), data.long(), rand)
 
 
+# Basic RAPPOR: Bloom filter + randomized response.
 def rappor(data, epsilon: float, m: int = 16, k: int = 2) -> torch.Tensor:
-    """Basic RAPPOR: Bloom filter + randomized response."""
     data = _to_tensor(data)
     n = data.numel()
     bloom = torch.zeros((n, m), dtype=torch.bool, device=data.device)
@@ -367,9 +372,10 @@ def rappor(data, epsilon: float, m: int = 16, k: int = 2) -> torch.Tensor:
     return out
 
 
+# List of privacy preservation algorithms.
 def get_noise_generators():
     """
-        Parameters:
+        Parameters: None.
     
         Returns:
             [type]: Description of the return value.
@@ -388,6 +394,7 @@ def get_noise_generators():
     }
 
 
+# Calculate the utility score.
 def calculate_utility_privacy_score(domain, key, epsilon, **params):
     """
         Parameters:
@@ -416,6 +423,7 @@ def calculate_utility_privacy_score(domain, key, epsilon, **params):
     return -rmse
 
 
+# Evaluate the confidence interval for given algorithm. 
 def evaluate_algorithm_confidence(domain, key, epsilon, n_evals=10, **params):
     """
         Parameters:
@@ -448,6 +456,7 @@ def evaluate_algorithm_confidence(domain, key, epsilon, n_evals=10, **params):
     }
 
 
+# Calculates the utility, confidence, and reliability scores.
 def performance_explanation_metrics(metrics):
     """
         Parameters:
@@ -473,6 +482,7 @@ def performance_explanation_metrics(metrics):
     }
 
 
+# Recomends the top 3 privacy preservation algorithms.
 def recommend_top3(domain, n_evals=5, init_points=2, n_iter=5):
     """
         Parameters:
@@ -530,6 +540,7 @@ def recommend_top3(domain, n_evals=5, init_points=2, n_iter=5):
     return ranked[:3]  # Return top 3 mechanisms
 
 
+# Visualize the original data.
 def visualize_data(domain, title="Data Distribution"):
     """
         Parameters:
@@ -546,6 +557,7 @@ def visualize_data(domain, title="Data Distribution"):
     plt.title(title); plt.xlabel("Value"); plt.ylabel("Frequency"); plt.grid(alpha=0.3); plt.show()
 
 
+# Visualize the simulairty analysis using KS, JSD, and Pearson metrics.
 def visualize_similarity(domain, key, epsilon, **params):
     """
         Parameters:
@@ -617,7 +629,7 @@ def visualize_similarity(domain, key, epsilon, **params):
 
     return metrics
 
-# Visualize top-3 recommendations
+# Visualize top-3 recommendations.
 def visualize_top3(recommendations):
     """
         Parameters:
@@ -692,7 +704,7 @@ def visualize_confidence_top3(domain, recommendations, n_evals=10):
     plt.grid(axis='y', alpha=0.3)
     plt.show()
 
-# Combined overlay plot
+# Combined overlay plot.
 def visualize_overlay_original_and_private(domain, top3):
     """
         Parameters:
