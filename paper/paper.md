@@ -1,7 +1,7 @@
 ---
 title: 'PRESTO: A Python package for recommending privacy preservation algorithm based on user preferences.'
 date: 26 May 2025
-bibliography: paper/paper.bib
+bibliography: paper.bib
 
 tags:
   - Python
@@ -90,28 +90,28 @@ PRESTO advances the state of the art by unifying statistical dataset analysis, B
 We conducted experiments to evaluate the effectiveness of our approach.
 
 ### Energy Compumtion with Bayesian Optimization (Dataset: Hourly Consumption (Min))
-1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/energy.png)
+1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](images/energy.png)
 2. Top-3 Recommendations:
    DP_Laplace: $\varepsilon$=3.6277, mean_rmse=0.3817, ci_width=0.0279, reliability=93.90<br>
    DP_Exponential: $\varepsilon$=3.6300, mean_rmse=0.3835, ci_width=0.0416, reliability=62.68<br>
    DP_Gaussian: $\varepsilon$=4.1687, mean_rmse=0.8326, ci_width=0.0525, reliability=22.88<br>
 
 ### Medical Measuments with Bayesian Optimization (Dataset: Heart Rate (Min))
-1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/medical.png)
+1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](images/medical.png)
 2. Top-3 Recommendations:
    DP_Laplace: $\varepsilon$=3.6254, mean_rmse=0.3901, ci_width=0.0054, reliability=474.71<br>
    DP_Exponential: $\varepsilon$=3.6319, mean_rmse=0.3916, ci_width=0.0051, reliability=500.71<br>
    DP_Gaussian: $\varepsilon$=5.0000, mean_rmse=0.6824, ci_width=0.0047, reliability=311.79<br>
 
 ### Finance Transactions with Bayesian Optimization (Dataset: Payment Transactions (Min))
-1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/finance.png)
+1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](images/finance.png)
 2. Top-3 Recommendations:
    DP_Laplace: $\varepsilon$=4.1687, mean_rmse=0.3461, ci_width=0.0340, reliability=84.98<br>
    DP_Exponential: $\varepsilon$=3.6296, mean_rmse=0.3864, ci_width=0.0453, reliability=57.13<br>
    DP_Gaussian: $\varepsilon$=4.1690, mean_rmse=0.8270, ci_width=0.0560, reliability=21.59<br>
 
 ### Sensor Temperature Time‐Series with Bayesian Optimization (Dataset: Payment Transactions (Min))
-1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/energy.png)
+1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](images/energy.png)
 2. Top-3 Recommendations:
    DP_Laplace: $\varepsilon$=3.6296, mean_rmse=0.3846, ci_width=0.0126, reliability=206.36<br>
    DP_Exponential: $\varepsilon$=3.6296, mean_rmse=0.3883, ci_width=0.0187, reliability=137.72<br>
@@ -121,7 +121,7 @@ We conducted experiments to evaluate the effectiveness of our approach.
 
 1. The best algorithm for a given $\varepsilon$
 
-![The best algorithm for a given epsilon](../images/fixedeps.png)
+![The best algorithm for a given epsilon](images/fixedeps.png)
 
 Best by Similarity:  {'algorithm': 'PercentilePrivacy', 'score': np.float32(0.9841)}<br>
 Best by Reliability: {'algorithm': 'PercentilePrivacy', 'score': inf}<br>
