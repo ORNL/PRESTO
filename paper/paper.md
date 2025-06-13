@@ -47,15 +47,16 @@ PRESTO advances the state of the art by unifying statistical dataset analysis, B
    - Maintain a dictionary of privacy functions (`get_noise_generators()`), each mapping `(data, ε) → privatized_data`.  
 3. **Bayesian Optimization of ε**  
    - For each mechanism, define  
-     ```math
-       f(ε) = -\mathrm{RMSE}\bigl(\text{data},\,\text{mechanism}_ε(\text{data})\bigr)
-     ```  
-     and maximize over ε∈[εₘᵢₙ,εₘₐₓ] using Gaussian‐process Bayesian optimization.  
+     ```markdown
+      $$
+        f(\varepsilon) = -\mathrm{RMSE}\bigl(\text{data},\,\text{mechanism}_\varepsilon(\text{data})\bigr)
+      $$
+     and maximize over $\varepsilon \in [\varepsilon_{\min}, \,\varepsilon_{\max}]$ using Gaussian‐process Bayesian optimization.  
 4. **Confidence & Reliability**  
    - Compute 95% CI on RMSE at ε*; define  
-     ```math
-       \text{Reliability} = \frac{1}{\text{Mean RMSE} \times \text{CI Width}}.
-     ```  
+     $$
+      \mathrm{Reliability} \;=\; \frac{1}{\text{Mean RMSE}\times \text{CI Width}}.
+     $$  
 5. **Similarity Assessment**  
    - Measure distributional similarity via Kolmogorov–Smirnov, Jensen–Shannon, Pearson correlation.  
 6. **Multi‐Objective Ranking**  
@@ -86,14 +87,15 @@ We conducted experiments to evaluate the effectiveness of our approach.
    DP_Gaussian: ε=4.1690, mean_rmse=0.8270, ci_width=0.0560, reliability=21.59<br>
 
 ### Sensor Temperature Time‐Series with Bayesian Optimization (Dataset: Payment Transactions (Min))
-1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/temp.png)
+1. Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/energy.png)
 2. Top-3 Recommendations:
    DP_Laplace: ε=3.6296, mean_rmse=0.3846, ci_width=0.0126, reliability=206.36<br>
    DP_Exponential: ε=3.6296, mean_rmse=0.3883, ci_width=0.0187, reliability=137.72<br>
    DP_Gaussian: ε=3.6296, mean_rmse=0.9459, ci_width=0.0334, reliability=31.65<br>
 
 ### Energy Consumption with Fixed epsilon = 1
-1. The best algorithm for a given epsilon ![The best algorithm for a given epsilon](../images/fixedeps.png)
+1. The best algorithm for a given epsilon
+![The best algorithm for a given epsilon](../images/fixedeps.png)
 Best by Similarity:  {'algorithm': 'PercentilePrivacy', 'score': np.float32(0.9841)}<br>
 Best by Reliability: {'algorithm': 'PercentilePrivacy', 'score': inf}<br>
 Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}<br>
@@ -103,8 +105,8 @@ Baseline Accuracy (no privacy): 93.00%<br>
 DP Accuracy with 'PercentilePrivacy': 94.00%
 
 ### ML Classification with Private Gradients
-1. Pareto front for privacy budget vs accuracy  
-   <img src="../images/pareto_front.png" alt="Pareto front for privacy budget vs accuracy" width="400">
+1. Pareto front for privacy budget vs accuracy 
+![Pareto front for privacy budget vs accuracy](../images/pareto_front.png)
 
 # Conclusion
 PRESTO delivers a data-driven, automated, and extensible framework for differential-privacy mechanism selection and tuning. By profiling statistical properties, optimizing ε via Bayesian methods, and quantifying both utility and uncertainty, PRESTO guides users to the privacy solution best suited for their data. Its modular design allows seamless integration of new algorithms and metrics, positioning PRESTO as a flexible platform for both practitioners and researchers aiming to embed privacy guarantees in diverse analytical workflows.
@@ -113,3 +115,4 @@ PRESTO delivers a data-driven, automated, and extensible framework for different
 This manuscript has been co-authored by UT-Battelle, LLC under Contract No. DE-AC05-00OR22725 with the U.S. Department of Energy. The United States Government retains and the publisher, by accepting the article for publication, acknowledges that the United States Government retains a non-exclusive, paid-up, irrevocable, world-wide license to publish or reproduce the published form of this manuscript, or allow others to do so, for United States Government purposes. The Department of Energy will provide public access to these results of federally sponsored research in accordance with the DOE Public Access Plan (http://energy.gov/downloads/doe-public-access-plan).
 This material is based upon work supported by the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research under Contract No. DE-AC05-00OR22725. This research is sponsored by the Artificial Intelligence Initiative as part of the LDRD-SEED Program, at ORNL, managed by UT-Battelle, LLC and DOE ASCR Program. 
 
+# References
