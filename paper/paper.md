@@ -1,7 +1,7 @@
 ---
 title: 'PRESTO: A Python package for recomending privacy preservation algorithm based on user preferences.'
 date: 26 May 2025
-bibliography: paper.bib
+bibliography: paper/paper.bib
 ---
 tags:
   - Python
@@ -28,8 +28,6 @@ affiliations:
     index: 1
   - name: National Institute of Standards and Technology, United States
     index: 2
-date: 26 May 2025
-bibliography: paper.bib
 ---
 
 # Summary
