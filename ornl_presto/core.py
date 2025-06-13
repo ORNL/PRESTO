@@ -34,7 +34,6 @@ import pandas as pd, re
 from hashlib import sha256
 import matplotlib.pyplot as plt
 
-import GPy
 import gpytorch
 from bayes_opt import BayesianOptimization
 
@@ -42,7 +41,12 @@ from scipy import stats as st
 from scipy.stats import ks_2samp, pearsonr
 from scipy.spatial.distance import jensenshannon
 
-import torch.nn as nn
+try:
+    import torch.nn as nn
+    from torch.nn import RMSNorm
+except AttributeError:
+    RMSNorm = None  # or define a fallback
+
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 torch.set_default_dtype(torch.float64)
@@ -51,7 +55,7 @@ from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 
 from opacus.privacy_engine import PrivacyEngine
-
+from opacus.utils.uniform_sampler import UniformWithReplacementSampler
 
 SEED = 42
 random.seed(SEED)
@@ -65,6 +69,56 @@ if device.type == 'cuda':
     torch.cuda.manual_seed_all(SEED)
 
 print(f"Using device: {device}")
+
+class ExactGPModel(gpytorch.models.ExactGP):
+    def __init__(self, train_x, train_y, likelihood):
+        super(ExactGPModel, self).__init__(train_x, train_y, likelihood)
+        self.mean_module = gpytorch.means.ConstantMean()
+        self.covar_module = gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel())
+
+    def forward(self, x):
+        mean_x = self.mean_module(x)
+        covar_x = self.covar_module(x)
+        return gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
+
+
+# initialize likelihood and model
+def gpr_gpytorch(train_x, train_y, test_x, training_iter):
+    train_x = torch.tensor(train_x)
+    train_y = torch.tensor(train_y)
+    test_x = torch.tensor(test_x)
+
+    likelihood = gpytorch.likelihoods.GaussianLikelihood()
+    model = ExactGPModel(train_x, train_y, likelihood)
+
+    # Find optimal model hyperparameters
+    model.train()
+    likelihood.train()
+
+    # Use the adam optimizer
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.1)  # Includes GaussianLikelihood parameters
+
+    # "Loss" for GPs - the marginal log likelihood
+    mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
+
+    for i in range(training_iter):
+        # Zero gradients from previous iteration
+        optimizer.zero_grad()
+        # Output from model
+        output = model(train_x)
+        # Calc loss and backprop gradients
+        loss = -mll(output, train_y)
+        loss.backward()
+        optimizer.step()
+
+    model.eval()
+    likelihood.eval()
+    f_preds = model(test_x)
+    y_preds = likelihood(model(test_x))
+
+    f_mean = f_preds.mean
+    f_covar = f_preds.covariance_matrix
+    return f_mean, f_covar
 
 
 def numpy_to_list(nd_array):
@@ -476,7 +530,6 @@ def recommend_top3(domain, n_evals=5, init_points=2, n_iter=5):
     return ranked[:3]  # Return top 3 mechanisms
 
 
-
 def visualize_data(domain, title="Data Distribution"):
     """
         Parameters:
@@ -662,17 +715,8 @@ def visualize_overlay_original_and_private(domain, top3):
     plt.title("Overlay: Original vs Top-3 Privatized Distributions")
     plt.xlabel("Value"); plt.ylabel("Density"); plt.legend(); plt.grid(alpha=0.3); plt.show()
 
-
 # Recomendation the best algorithms for privacy, reliability and similary for given epsilon.
-
-def recommend_best_algorithms(
-    data: torch.Tensor,
-    epsilon: float,
-    get_noise_generators,
-    calculate_utility_privacy_score,
-    evaluate_algorithm_confidence,
-    performance_explanation_metrics
-):
+def recommend_best_algorithms(data: torch.Tensor, epsilon: float, get_noise_generators, calculate_utility_privacy_score, evaluate_algorithm_confidence,performance_explanation_metrics):
     """
     Returns the algorithms with:
       1) Maximum similarity (Pearson) between original & privatized data
@@ -748,7 +792,8 @@ def recommend_best_algorithms(
 
     return winners
 
-def dp_function(noise_multiplier, max_grad_norm):
+
+def dp_function(noise_multiplier, max_grad_norm, model_class, train_dataset, X_train):
     """
         Parameters:
             noise_multiplier ([type]): Description.
@@ -760,23 +805,23 @@ def dp_function(noise_multiplier, max_grad_norm):
 
     privacy_engine = PrivacyEngine()
     # Instantiate the model, loss function, and optimizer
+    model_pre_dp = model_class(input_size=X_train.shape[1])
     train_dataloader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-    model = BinaryClassifier(input_size=X_train.shape[1])
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.Adam(model_pre_dp.parameters(), lr=0.001)
     criterion = nn.BCELoss()
 
     # apply the privacy "engine"
     model, optimizer, data_loader = privacy_engine.make_private(
-        module=model,
-        optimizer=optimizer,
-        data_loader=train_dataloader,
-        noise_multiplier=noise_multiplier,
-        max_grad_norm=max_grad_norm,
+      module=model_pre_dp, 
+      optimizer=optimizer, 
+      data_loader=train_dataloader,
+      noise_multiplier=noise_multiplier, 
+      max_grad_norm=max_grad_norm,
     )
     return model, optimizer, criterion, data_loader, privacy_engine
 
 
-def dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_test):
+def dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_test, y_test):
     """
         Parameters:
             model ([type]): Description.
@@ -784,6 +829,7 @@ def dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_
             criterion ([type]): Description.
             train_dataloader ([type]): Description.
             X_test ([type]): Description.
+            y_test ([type]): Description.
     
         Returns:
             [type]: Description of the return value.
@@ -816,71 +862,33 @@ def dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_
     return predicted_classes, accuracy
 
 
-def dp_target(noise_multiplier, max_grad_norm):
+def dp_target(noise_multiplier, max_grad_norm, model_class, X_test, train_dataset, y_test):
     """
         Parameters:
             noise_multiplier ([type]): Description.
             max_grad_norm ([type]): Description.
+            model: e.g., BinaryClassifier, LogisticRegression.
     
         Returns:
             [type]: Description of the return value.
     """
 
     # apply DP to ML
-    model, optimizer, criterion, train_dataloader, privacy_engine = dp_function(noise_multiplier, max_grad_norm)
+    model, optimizer, criterion, train_dataloader, privacy_engine = dp_function(noise_multiplier, max_grad_norm, model_class, train_dataset, X_test)
     # compute accuracy
-    predicted_classes, accuracy = dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_test)
+    predicted_classes, accuracy = dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_test, y_test)
     return accuracy, privacy_engine, predicted_classes
 
 
-def dp_function2(noise_multiplier, max_grad_norm):
+def dp_pareto_front(x1, x2, model_class, X_test, train_dataset, y_test):
     """
         Parameters:
-            noise_multiplier ([type]): Description.
-            max_grad_norm ([type]): Description.
-    
-        Returns:
-            [type]: Description of the return value.
-    """
-
-    privacy_engine = PrivacyEngine()
-    # Instantiate the model, loss function, and optimizer
-    train_dataloader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-    model = LogisticRegression(input_size=X_train.shape[1])
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
-    criterion = nn.BCELoss()
-
-    # apply the privacy "engine"
-    model, optimizer, data_loader = privacy_engine.make_private(
-        module=model,
-        optimizer=optimizer,
-        data_loader=train_dataloader,
-        noise_multiplier=noise_multiplier,
-        max_grad_norm=max_grad_norm,
-    )
-    return model, optimizer, criterion, data_loader, privacy_engine
-
-
-def dp_target2(noise_multiplier, max_grad_norm):
-    """
-        Parameters:
-            noise_multiplier ([type]): Description.
-            max_grad_norm ([type]): Description.
-    
-        Returns:
-            [type]: Description of the return value.
-    """
-
-    # apply DP to ML
-    model, optimizer, criterion, train_dataloader, privacy_engine = dp_function2(noise_multiplier, max_grad_norm)
-    # compute accuracy
-    predicted_classes, accuracy = dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_test)
-    return accuracy, privacy_engine, predicted_classes
-
-
-def dp_pareto_front():
-    """
-        Parameters: None
+            model ([type]): Description.
+            optimizer ([type]): Description.
+            criterion ([type]): Description.
+            train_dataloader ([type]): Description.
+            X_test ([type]): Description.
+            y_test ([type]): Description.
     
         Returns:
             [type]: Description of the return value.
@@ -890,8 +898,6 @@ def dp_pareto_front():
     delta = .1
     accuracy_ = []
     epsilon_ = []
-    x1 = np.logspace(np.log10(.1), np.log10(100), 20)
-    x2 = np.logspace(np.log10(.1), np.log10(10), 20)
     xg1, xg2 = np.meshgrid(x1, x2)
     Xg = np.hstack((xg1.flatten()[:,None], xg2.flatten()[:,None]))
     measured_points = []
@@ -903,22 +909,17 @@ def dp_pareto_front():
 
     for i in range(100):
         print('run',i)
-        # train our GPs using all our prior data.
-        m1 = GPy.models.SparseGPRegression(X_params, Y_params[:,0][:,None], GPy.kern.RBF(2))
-        m2 = GPy.models.SparseGPRegression(X_params, Y_params[:,1][:,None], GPy.kern.RBF(2))
-        m1.optimize('bfgs', max_iters=100)
-        m2.optimize('bfgs', max_iters=100)
 
         # which data points are unmeasured?
         unmeasured_points = np.setdiff1d(np.arange(0,Xg.shape[0]),measured_points)
 
-        # Get the mean and covariance of the two GPs for the unmeasured (x,y) values.
-        mean1, Cov1 = m1.predict_noiseless(Xg[unmeasured_points,:], full_cov=True)
-        mean2, Cov2 = m2.predict_noiseless(Xg[unmeasured_points,:], full_cov=True)
+        # train our GPs using all our prior data.
+        training_iter = 50
+        mean1, Cov1 = gpr_gpytorch(X_params, Y_params[:,0], Xg[unmeasured_points,:], training_iter)
+        mean2, Cov2 = gpr_gpytorch(X_params, Y_params[:,1], Xg[unmeasured_points,:], training_iter)
 
-        # Sample the GPs using Thompson sampling, with 1 sample for each property we want to maximize.
-        Z1  = np.random.multivariate_normal(mean1.flatten(), Cov1, 1).T
-        Z2  = np.random.multivariate_normal(mean2.flatten(), Cov2, 1).T
+        Z1  = np.random.multivariate_normal(mean1.detach().numpy().flatten(), Cov1.detach().numpy(), 1).T
+        Z2  = np.random.multivariate_normal(mean2.detach().numpy().flatten(), Cov2.detach().numpy(), 1).T
 
         # Find the full pareto front.
         lam = np.random.dirichlet(alphas,1)
@@ -929,77 +930,123 @@ def dp_pareto_front():
         pt = unmeasured_points[pt]
         measured_points = np.append(measured_points, pt)
 
-        accuracy, privacy_engine, predicted_classes = dp_target(Xg[pt,0], Xg[pt,1])
+        accuracy, privacy_engine, predicted_classes = dp_target(Xg[pt,0], Xg[pt,1], model_class, X_test, train_dataset, y_test)
         epsilon = privacy_engine.get_epsilon(delta)
+        
         epsilon_.append(epsilon)
         accuracy_.append(accuracy)
         X_params = np.vstack((X_params, np.asarray([Xg[pt,0], Xg[pt,1]])[None,:]))
         Y_params = np.vstack((Y_params, np.asarray([epsilon,accuracy])))
         print('epsilon', epsilon)
     return measured_points, epsilon_, accuracy_
+  
+  
+def dp_hyper(model_class, train_dataset, test_dataset, seed=42):
+    # 1) Set up device
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    # 2) Seed everything for reproducibility
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if device.type == "cuda":
+        torch.cuda.manual_seed_all(seed)
 
-def dp_pareto_front_LR():
-    """
-        Parameters: None
+    def train_with_privacy(noise_multiplier, batch_size, learning_rate, clipping_norm):
+        batch_size = int(round(batch_size))
+
+        # instantiate and move model to device
+        model     = model_class().to(device)
+        optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+        criterion = nn.CrossEntropyLoss()
+
+        # sampler + data loader with seeded generator
+        sample_rate = batch_size / len(train_dataset)
+        sampler = UniformWithReplacementSampler(
+            num_samples=len(train_dataset),
+            sample_rate=sample_rate,
+        )
+
+        gen = torch.Generator()
+        gen.manual_seed(seed)
+
+        train_loader = DataLoader(
+            train_dataset,
+            batch_sampler=sampler,
+            generator=gen,
+        )
+
+        # hook up DP
+        privacy_engine = PrivacyEngine()
+        model, optimizer, train_loader = privacy_engine.make_private(
+            module=model,
+            optimizer=optimizer,
+            data_loader=train_loader,
+            noise_multiplier=noise_multiplier,
+            max_grad_norm=clipping_norm,
+        )
+
+        # training loop (single epoch; repeat if you want multiple)
+        model.train()
+        for data, target in train_loader:
+            data, target = data.to(device), target.to(device)
+            optimizer.zero_grad()
+            loss = criterion(model(data), target)
+            loss.backward()
+            optimizer.step()
+
+        epsilon_spent = privacy_engine.accountant.get_epsilon(delta=1e-5)
+        return model, epsilon_spent
+
+    def evaluate_model(model):
+        model.eval()
+        correct, total = 0, 0
+
+        gen = torch.Generator()
+        gen.manual_seed(seed)
+
+        eval_loader = DataLoader(
+            test_dataset,
+            batch_size=128,
+            shuffle=False,
+            generator=gen,
+        )
+
+        with torch.no_grad():
+            for data, target in eval_loader:
+                data, target = data.to(device), target.to(device)
+                outputs = model(data)
+                pred = outputs.argmax(dim=1)
+                correct += (pred == target).sum().item()
+                total += target.size(0)
+
+        return 100.0 * correct / total
+
+    def bo_objective(noise_multiplier, batch_size, learning_rate, clipping_norm):
+        model, eps = train_with_privacy(noise_multiplier, batch_size, learning_rate, clipping_norm)
+        print(f"Epsilon spent: {eps:.3f}")
+        if eps > 5.0:
+            return 0.0
+
+        acc = evaluate_model(model)
+        print(f"Accuracy: {acc:.2f}%")
+        if acc < 85.0:
+            return 0.0
+
+        return acc
+
+    # bounds
+    pbounds = {
+        'noise_multiplier': (0.5, 3.0),
+        'batch_size':       (16, 128),
+        'learning_rate':    (1e-5, 1e-2),
+        'clipping_norm':    (0.1, 2.0),
+    }
+
+    optimizer = BayesianOptimization(f=bo_objective, pbounds=pbounds, random_state=seed, verbose=2)
+    optimizer.maximize(init_points=5, n_iter=15)
+
+    best_params   = optimizer.max['params']
+    best_accuracy = optimizer.max['target']
     
-        Returns:
-            [type]: Description of the return value.
-    """
-
-    # delta is .1 below.
-    delta = .1
-    accuracy_ = []
-    epsilon_ = []
-    x1 = np.logspace(np.log10(.1), np.log10(100), 20)
-    x2 = np.logspace(np.log10(.1), np.log10(10), 20)
-    xg1, xg2 = np.meshgrid(x1, x2)
-    Xg = np.hstack((xg1.flatten()[:,None], xg2.flatten()[:,None]))
-    measured_points = []
-
-    X_params = np.asarray([[100., 1.],[10,1.],[1.1, 1.],[.1, .1]])
-    Y_params = np.asarray([[-.01, .51],[-.09, .84],[.62,.865],[650,.885]])
-
-    alphas = np.asarray([1,1])
-
-    for i in range(100):
-        print('run',i)
-        # train our GPs using all our prior data.
-        m1 = GPy.models.SparseGPRegression(X_params, Y_params[:,0][:,None], GPy.kern.RBF(2))
-        m2 = GPy.models.SparseGPRegression(X_params, Y_params[:,1][:,None], GPy.kern.RBF(2))
-        m1.optimize('bfgs', max_iters=100)
-        m2.optimize('bfgs', max_iters=100)
-
-        # which data points are unmeasured?
-        unmeasured_points = np.setdiff1d(np.arange(0,Xg.shape[0]),measured_points)
-
-        # Get the mean and covariance of the two GPs for the unmeasured (x,y) values.
-        mean1, Cov1 = m1.predict_noiseless(Xg[unmeasured_points,:], full_cov=True)
-        mean2, Cov2 = m2.predict_noiseless(Xg[unmeasured_points,:], full_cov=True)
-
-        # Sample the GPs using Thompson sampling, with 1 sample for each property we want to maximize.
-        Z1  = np.random.multivariate_normal(mean1.flatten(), Cov1, 1).T
-        Z2  = np.random.multivariate_normal(mean2.flatten(), Cov2, 1).T
-
-        # Find the full pareto front.
-        lam = np.random.dirichlet(alphas,1)
-
-        # solve for the point that maximizes our objective function
-        # !!! Want min epsilon, so negative for Z1
-        pt = np.argmax(-lam[0,0]*Z1 + lam[0,1]*Z2)
-        pt = unmeasured_points[pt]
-        measured_points = np.append(measured_points, pt)
-
-        accuracy, privacy_engine, predicted_classes = dp_target2(Xg[pt,0], Xg[pt,1])
-        epsilon = privacy_engine.get_epsilon(delta)
-        epsilon_.append(epsilon)
-        accuracy_.append(accuracy)
-        X_params = np.vstack((X_params, np.asarray([Xg[pt,0], Xg[pt,1]])[None,:]))
-        Y_params = np.vstack((Y_params, np.asarray([epsilon,accuracy])))
-        print('epsilon', epsilon)
-    return measured_points, epsilon_, accuracy_
-
-
-
-
-
+    return best_params, best_accuracy

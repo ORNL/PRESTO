@@ -7,8 +7,8 @@ where = ["."]
 exclude = ["tests"]
 
 [project]
-name = "presto"
-version = "0.1.0"
+name = "ornl_presto"
+version = "0.1.28"
 description = "A Python package for privacy preservation algorithm recomendation"
 readme = "README.md"
 requires-python = ">=3.7"
@@ -24,7 +24,6 @@ dependencies = [
   "scipy",
   "matplotlib",
   "bayesian-optimization",
-  "GPy",
   "gpytorch",
   "scikit-learn",
   "opacus"

@@ -1,6 +1,6 @@
-Metadata-Version: 2.4
-Name: presto
-Version: 0.1.0
+Metadata-Version: 2.1
+Name: ornl_presto
+Version: 0.1.28
 Summary: A Python package for privacy preservation algorithm recomendation
 Home-page: https://github.com/OKotevska/PRESTO/
 Author: Olivera Kotevska
@@ -38,14 +38,9 @@ Requires-Dist: pandas
 Requires-Dist: scipy
 Requires-Dist: matplotlib
 Requires-Dist: bayesian-optimization
-Requires-Dist: GPy
 Requires-Dist: gpytorch
 Requires-Dist: scikit-learn
 Requires-Dist: opacus
-Dynamic: author
-Dynamic: home-page
-Dynamic: license-file
-Dynamic: requires-python
 
 ![# PRESTO](images/PRESTO-logo-tagline-no-bg.png)
 
@@ -82,7 +77,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Import PRESTO functions from your latest module
-from presto import (
+from ornl_presto import (
     get_noise_generators,
     recommend_top3,
     visualize_data,

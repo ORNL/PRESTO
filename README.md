@@ -33,7 +33,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Import PRESTO functions from your latest module
-from presto import (
+from ornl_presto import (
     get_noise_generators,
     recommend_top3,
     visualize_data,

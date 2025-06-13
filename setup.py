@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 from pathlib import Path
 
 setup(
-    name="presto",
-    version="0.1.0",
-    packages=find_packages(),
+    name="ornl_presto",
+    version="0.1.28",
+    packages=["ornl_presto"],  
     install_requires=[
         "torch",
         "numpy",
@@ -13,7 +13,6 @@ setup(
         "scipy",
         "matplotlib",
         "bayesian-optimization",
-        "GPy",
         "gpytorch",
         "scikit-learn",
         "opacus"

@@ -5,7 +5,6 @@ pandas
 scipy
 matplotlib
 bayesian-optimization
-GPy
 gpytorch
 scikit-learn
 opacus
