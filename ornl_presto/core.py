@@ -804,7 +804,7 @@ def recommend_best_algorithms(data: torch.Tensor, epsilon: float, get_noise_gene
 
     return winners
 
-
+# Calculates the privacy preservation for the Ml model.
 def dp_function(noise_multiplier, max_grad_norm, model_class, train_dataset, X_train):
     """
         Parameters:
@@ -833,6 +833,7 @@ def dp_function(noise_multiplier, max_grad_norm, model_class, train_dataset, X_t
     return model, optimizer, criterion, data_loader, privacy_engine
 
 
+# This code runs the DP-impacted model to compute the Accuracy
 def dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_test, y_test):
     """
         Parameters:
@@ -846,8 +847,6 @@ def dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_
         Returns:
             [type]: Description of the return value.
     """
-
-    # This code runs the DP-impacted model to compute the Accuracy
 
     # Training loop
     epochs = 10
@@ -874,6 +873,7 @@ def dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_
     return predicted_classes, accuracy
 
 
+# This is a helper function.
 def dp_target(noise_multiplier, max_grad_norm, model_class, X_test, train_dataset, y_test):
     """
         Parameters:
@@ -891,7 +891,7 @@ def dp_target(noise_multiplier, max_grad_norm, model_class, X_test, train_datase
     predicted_classes, accuracy = dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_test, y_test)
     return accuracy, privacy_engine, predicted_classes
 
-
+# Visualizes all the efficient solutions.
 def dp_pareto_front(x1, x2, model_class, X_test, train_dataset, y_test):
     """
         Parameters:
@@ -952,7 +952,7 @@ def dp_pareto_front(x1, x2, model_class, X_test, train_dataset, y_test):
         print('epsilon', epsilon)
     return measured_points, epsilon_, accuracy_
   
-  
+# Use PRESTO with Opacus to optimize the privacy and ML parameters.  
 def dp_hyper(model_class, train_dataset, test_dataset, seed=42):
     # 1) Set up device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
