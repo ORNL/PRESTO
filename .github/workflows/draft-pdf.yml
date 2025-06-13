@@ -1,21 +1,40 @@
+name: Build Paper PDF
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'paper/**'
+      - '.github/workflows/draft-pdf.yml'
+  workflow_dispatch:   # enables manual trigger
+
 permissions:
-  contents: write
+  contents: write  # allow pushing updated PDF back to repo
 
 jobs:
   build-pdf:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           persist-credentials: true
 
-      - uses: openjournals/openjournals-draft-action@v1.0
+      - name: Build draft PDF
+        uses: openjournals/openjournals-draft-action@v1.0
         with:
           journal: joss
           paper-path: paper/paper.md
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper
+          path: paper/paper.pdf
 
       - name: Commit PDF to repo
         uses: EndBug/add-and-commit@v9
         with:
           message: '(auto) update paper.pdf'
-          add:     'paper/paper.pdf'
+          add: 'paper/paper.pdf'
