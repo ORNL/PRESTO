@@ -1,7 +1,7 @@
 ---
 title: 'PRESTO: A Python package for recomending privacy preservation algorithm based on user preferences.'
 date: 26 May 2025
-bibliography: paper/paper.bib
+bibliography: paper.bib
 ---
 tags:
   - Python
