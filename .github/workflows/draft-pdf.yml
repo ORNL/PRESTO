@@ -26,7 +26,7 @@ jobs:
         with:
           journal: joss
           paper-path: paper/paper.md
-          args: "--citeproc --resource-path=.:images"
+          args: "--citeproc --resource-path=.:images:paper"
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
