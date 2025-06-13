@@ -93,7 +93,8 @@ We conducted experiments to evaluate the effectiveness of our approach.
    DP_Gaussian: ε=3.6296, mean_rmse=0.9459, ci_width=0.0334, reliability=31.65<br>
 
 ### Energy Consumption with Fixed epsilon = 1
-1. The best algorithm for a given epsilon ![The best algorithm for a given epsilon](../images/fixedeps.png)
+1. The best algorithm for a given epsilon
+   ![The best algorithm for a given epsilon](../images/fixedeps.png)
 Best by Similarity:  {'algorithm': 'PercentilePrivacy', 'score': np.float32(0.9841)}<br>
 Best by Reliability: {'algorithm': 'PercentilePrivacy', 'score': inf}<br>
 Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}<br>
@@ -103,8 +104,7 @@ Baseline Accuracy (no privacy): 93.00%<br>
 DP Accuracy with 'PercentilePrivacy': 94.00%
 
 ### ML Classification with Private Gradients
-1. Pareto front for privacy budget vs accuracy  
-   <img src="../images/pareto_front.png" alt="Pareto front for privacy budget vs accuracy" width="400">
+1. Pareto front for privacy budget vs accuracy ![Pareto front for privacy budget vs accuracy](../images/pareto_front.png)
 
 # Conclusion
 PRESTO delivers a data-driven, automated, and extensible framework for differential-privacy mechanism selection and tuning. By profiling statistical properties, optimizing ε via Bayesian methods, and quantifying both utility and uncertainty, PRESTO guides users to the privacy solution best suited for their data. Its modular design allows seamless integration of new algorithms and metrics, positioning PRESTO as a flexible platform for both practitioners and researchers aiming to embed privacy guarantees in diverse analytical workflows.
@@ -112,4 +112,6 @@ PRESTO delivers a data-driven, automated, and extensible framework for different
 # Acknowledgements
 This manuscript has been co-authored by UT-Battelle, LLC under Contract No. DE-AC05-00OR22725 with the U.S. Department of Energy. The United States Government retains and the publisher, by accepting the article for publication, acknowledges that the United States Government retains a non-exclusive, paid-up, irrevocable, world-wide license to publish or reproduce the published form of this manuscript, or allow others to do so, for United States Government purposes. The Department of Energy will provide public access to these results of federally sponsored research in accordance with the DOE Public Access Plan (http://energy.gov/downloads/doe-public-access-plan).
 This material is based upon work supported by the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research under Contract No. DE-AC05-00OR22725. This research is sponsored by the Artificial Intelligence Initiative as part of the LDRD-SEED Program, at ORNL, managed by UT-Battelle, LLC and DOE ASCR Program. 
+
+# References
 
