@@ -105,9 +105,10 @@ Top-3 Recommendations:
 
 Top-3 Recommendations:
 
-    - **DP_Laplace:** $\varepsilon = 3.6254$, mean_rmse = 0.3901, ci_width = 0.0054, reliability = 474.71  
-    - **DP_Exponential:** $\varepsilon = 3.6319$, mean_rmse = 0.3916, ci_width = 0.0051, reliability = 500.71  
-    - **DP_Gaussian:** $\varepsilon = 5.0000$, mean_rmse = 0.6824, ci_width = 0.0047, reliability = 311.79  
+   - **DP_Laplace:** $\varepsilon=3.6254$, mean_rmse=0.3901, ci_width=0.0054, reliability=474.71
+   - **DP_Exponential:** $\varepsilon=3.6319$, mean_rmse=0.3916, ci_width=0.0051, reliability=500.71
+   - **DP_Gaussian:** $\varepsilon=5.0000$, mean_rmse=0.6824, ci_width=0.0047, reliability=311.79
+
 
 ### Finance Transactions with Bayesian Optimization (Dataset: Payment Transactions (Min))
 
@@ -124,9 +125,11 @@ Top-3 Recommendations:
 ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/energy.png)
 
 Top-3 Recommendations:
+
    - **DP_Laplace:** $\varepsilon=3.6296$, mean_rmse=0.3846, ci_width=0.0126, reliability=206.36
    - **DP_Exponential:** $\varepsilon=3.6296$, mean_rmse=0.3883, ci_width=0.0187, reliability=137.72
    - **DP_Gaussian:** $\varepsilon=3.6296$, mean_rmse=0.9459, ci_width=0.0334, reliability=31.65
+
 
 ### Energy Consumption with Fixed epsilon = 1
 
