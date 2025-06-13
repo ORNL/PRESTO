@@ -93,7 +93,7 @@ We conducted experiments to evaluate the effectiveness of our approach.
 
 ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/energy.png)
 
-2. Top-3 Recommendations:
+Top-3 Recommendations:
 
    - **DP_Laplace:** $\varepsilon=3.6277$, mean_rmse=0.3817, ci_width=0.0279, reliability=93.90
    - **DP_Exponential:** $\varepsilon=3.6300$, mean_rmse=0.3835, ci_width=0.0416, reliability=62.68
@@ -103,7 +103,7 @@ We conducted experiments to evaluate the effectiveness of our approach.
 
 ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/medical.png)
 
-2. Top-3 Recommendations:
+Top-3 Recommendations:
 
     - **DP_Laplace:** $\varepsilon = 3.6254$, mean_rmse = 0.3901, ci_width = 0.0054, reliability = 474.71  
     - **DP_Exponential:** $\varepsilon = 3.6319$, mean_rmse = 0.3916, ci_width = 0.0051, reliability = 500.71  
@@ -113,7 +113,7 @@ We conducted experiments to evaluate the effectiveness of our approach.
 
 ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/finance.png)
 
-2. Top-3 Recommendations:
+Top-3 Recommendations:
 
    - **DP_Laplace:** $\varepsilon=4.1687$, mean_rmse=0.3461, ci_width=0.0340, reliability=84.98
    - **DP_Exponential:** $\varepsilon=3.6296$, mean_rmse=0.3864, ci_width=0.0453, reliability=57.13
@@ -123,7 +123,7 @@ We conducted experiments to evaluate the effectiveness of our approach.
 
 ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/energy.png)
 
-2. Top-3 Recommendations:
+Top-3 Recommendations:
    - **DP_Laplace:** $\varepsilon=3.6296$, mean_rmse=0.3846, ci_width=0.0126, reliability=206.36
    - **DP_Exponential:** $\varepsilon=3.6296$, mean_rmse=0.3883, ci_width=0.0187, reliability=137.72
    - **DP_Gaussian:** $\varepsilon=3.6296$, mean_rmse=0.9459, ci_width=0.0334, reliability=31.65
@@ -132,17 +132,18 @@ We conducted experiments to evaluate the effectiveness of our approach.
 
 ![The best algorithm for a given epsilon](../images/fixedeps.png)
 
-Best by Similarity:  {'algorithm': 'PercentilePrivacy', 'score': np.float32(0.9841)}
-Best by Reliability: {'algorithm': 'PercentilePrivacy', 'score': inf}
-Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}
-
-### ML Classification with Private Gradients
-Baseline Accuracy (no privacy): 93.00%
-DP Accuracy with 'PercentilePrivacy': 94.00%
+- Best by Similarity:  {'algorithm': 'PercentilePrivacy', 'score': np.float32(0.9841)}
+- Best by Reliability: {'algorithm': 'PercentilePrivacy', 'score': inf}
+- Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}
 
 ### ML Classification with Private Gradients
 
-![Pareto front for privacy budget vs accuracy](../images/pareto_front.png){ width=450px float=left }
+- Baseline Accuracy (no privacy): 93.00%
+- DP Accuracy with 'PercentilePrivacy': 94.00%
+
+### ML Classification with Private Gradients
+
+![Pareto front for privacy budget vs accuracy](../images/pareto_front.png){ width=850px float=left }
 
 
 # Conclusion

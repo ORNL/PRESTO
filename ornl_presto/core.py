@@ -64,6 +64,7 @@ random.seed(SEED)
 np.random.seed(SEED)
 torch.manual_seed(SEED)
 
+# Check if CUDA is available to use.
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 if device.type == 'cuda':
@@ -72,6 +73,7 @@ if device.type == 'cuda':
 print(f"Using device: {device}")
 
 
+# Helper class that creates Gaussian Process model.
 class ExactGPModel(gpytorch.models.ExactGP):
     def __init__(self, train_x, train_y, likelihood):
         super(ExactGPModel, self).__init__(train_x, train_y, likelihood)
@@ -181,6 +183,7 @@ def type_checking_return_actual_dtype(domain, data_list, shape):
     return arr.tolist()
 
 
+# Differential privacy algorithm Gaussian.
 def applyDPGaussian(domain, sensitivity=1, delta=1e-5, epsilon=1, gamma=1):
     """
         Parameters:
@@ -200,6 +203,7 @@ def applyDPGaussian(domain, sensitivity=1, delta=1e-5, epsilon=1, gamma=1):
     return type_checking_return_actual_dtype(domain, privatized.tolist(), shape)
 
 
+# Differential privacy algorithm Exponencial.
 def applyDPExponential(domain, sensitivity=1, epsilon=1, gamma=1.0):
     """
         Parameters:
@@ -220,6 +224,7 @@ def applyDPExponential(domain, sensitivity=1, epsilon=1, gamma=1.0):
     return type_checking_return_actual_dtype(domain, priv.tolist(), shape)
 
 
+# Differential privacy algorithmLaplacian.
 def applyDPLaplace(domain, sensitivity=1, epsilon=1, gamma=1):
     """
         Parameters:
@@ -238,6 +243,7 @@ def applyDPLaplace(domain, sensitivity=1, epsilon=1, gamma=1):
     return type_checking_return_actual_dtype(domain, privatized.tolist(), shape)
 
 
+# Helper function for SVT.
 def above_threshold_SVT(val, domain_list, T, epsilon):
     """
         Parameters:
@@ -257,6 +263,7 @@ def above_threshold_SVT(val, domain_list, T, epsilon):
     return random.choice(domain_list)
 
 
+# Differential privacy algorithm Sparse Vector Technique (SVT).
 def applySVTAboveThreshold_full(domain, epsilon):
     """
         Parameters:
@@ -272,6 +279,7 @@ def applySVTAboveThreshold_full(domain, epsilon):
     return type_checking_return_actual_dtype(domain, privatized, shape)
 
 
+# Differential privacy algorithm Percentale Privacy.
 def percentilePrivacy(domain, percentile=50):
     """
         Parameters:
@@ -629,6 +637,7 @@ def visualize_similarity(domain, key, epsilon, **params):
 
     return metrics
 
+
 # Visualize top-3 recommendations.
 def visualize_top3(recommendations):
     """
@@ -647,6 +656,7 @@ def visualize_top3(recommendations):
     plt.ylabel("Mean Utility-Privacy Score")
     plt.grid(axis='y', alpha=0.3)
     plt.show()
+
 
 # Visualize confidence for top algorithm. Desired: narrow error bars indicating small CI.
 def visualize_confidence(domain, key, epsilon, n_evals=10, **params):
@@ -669,6 +679,7 @@ def visualize_confidence(domain, key, epsilon, n_evals=10, **params):
     plt.title(f"Confidence: {key} (ε={epsilon:.2f})")
     plt.ylabel("Mean Utility-Privacy Score"); plt.grid(alpha=0.3); plt.show()
     return res
+
 
 # Confidence visualization for Top-3 Mechanisms.
 def visualize_confidence_top3(domain, recommendations, n_evals=10):
@@ -704,6 +715,7 @@ def visualize_confidence_top3(domain, recommendations, n_evals=10):
     plt.grid(axis='y', alpha=0.3)
     plt.show()
 
+
 # Combined overlay plot.
 def visualize_overlay_original_and_private(domain, top3):
     """
@@ -726,6 +738,7 @@ def visualize_overlay_original_and_private(domain, top3):
         sns.kdeplot(arr_priv, label=f"{key} ε={eps:.4f}", fill=False)
     plt.title("Overlay: Original vs Top-3 Privatized Distributions")
     plt.xlabel("Value"); plt.ylabel("Density"); plt.legend(); plt.grid(alpha=0.3); plt.show()
+
 
 # Recomendation the best algorithms for privacy, reliability and similary for given epsilon.
 def recommend_best_algorithms(data: torch.Tensor, epsilon: float, get_noise_generators, calculate_utility_privacy_score, evaluate_algorithm_confidence,performance_explanation_metrics):
@@ -803,6 +816,7 @@ def recommend_best_algorithms(data: torch.Tensor, epsilon: float, get_noise_gene
     plt.show()
 
     return winners
+
 
 # Calculates the privacy preservation for the Ml model.
 def dp_function(noise_multiplier, max_grad_norm, model_class, train_dataset, X_train):
@@ -891,6 +905,7 @@ def dp_target(noise_multiplier, max_grad_norm, model_class, X_test, train_datase
     predicted_classes, accuracy = dp_function_train_and_pred(model, optimizer, criterion, train_dataloader, X_test, y_test)
     return accuracy, privacy_engine, predicted_classes
 
+
 # Visualizes all the efficient solutions.
 def dp_pareto_front(x1, x2, model_class, X_test, train_dataset, y_test):
     """
@@ -952,6 +967,7 @@ def dp_pareto_front(x1, x2, model_class, X_test, train_dataset, y_test):
         print('epsilon', epsilon)
     return measured_points, epsilon_, accuracy_
   
+
 # Use PRESTO with Opacus to optimize the privacy and ML parameters.  
 def dp_hyper(model_class, train_dataset, test_dataset, seed=42):
     # 1) Set up device
