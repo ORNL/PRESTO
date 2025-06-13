@@ -1,20 +1,19 @@
 ![# PRESTO](images/PRESTO-logo-tagline-no-bg.png)
 
 # PRESTO
-PRESTO: Privacy REcommendation and SecuriTy Optimization is a Python package that provides recomendation for the best privacy preservation algorithm based on user preferences. Traditional privacy preservation libraries provide an implementation of a set of algorithms but the user need to experiment and detemine which of them is the best for the given dataset. PRESTO provives recomendation of the top best algorithms and compares all the given algorithms so it is easier for the user to decide.
+PRESTO: Privacy REcommendation and SecuriTy Optimization is a Python package that provides a recomendation for the best privacy preservation algorithm based on user preferences. Traditional privacy preservation libraries provide an implementation of a set of algorithms but the user needs to experiment and detemine which of them is the best for the given dataset. PRESTO provides a recomendation of the top best algorithms and compares all the given algorithms so it is easier for the user to decide.
 
 ## Summary
-This package includes functions for:
-- Defines reliability, confidence, and similarity score.
-- Modular solution so new privacy preservation algorithms or privacy preservation library can be easily integrated.
+This package includes functions that:
+- Calculates reliability, confidence, and similarity score.
+- Provides a modular solution so new privacy preservation algorithms or privacy preservation library can be easily integrated.
 - Determines the best algorithm, privacy loss, confidence interval, reliability using Bayesian Optimization.
 - Recommends the best privacy preservation algorithms for a given dataset and user requirements.
-- Calculate the privacy-utility, similarity and reliability score.
 - Finds the best privacy preservation and machine learning settings for a given algorithm, dataset, and user requirements.
-- Visualize the top 3 algorithms and their confidence intervals.
-- Visualize the original and private datasets.
-- Visualize the similarity between the datasets and reliability score.
-- Integration with existing privacy preservation libraries (e.g., Opacus) for finding the optimal parameters.
+- Visualizes the top 3 algorithms and their confidence intervals.
+- Visualizes the original and private datasets.
+- Visualizes the similarity between the datasets and reliability score.
+- Integrates with existing privacy preservation libraries (e.g., Opacus) for finding the optimal parameters.
 
 ## Installation
 You can install the package from source:
@@ -86,7 +85,7 @@ for rec in top3:
 ```
 
 ## Detailed Examples
-For more examples see the Tutorial folder, there are examples using real-world datasets for electric grid and medical domains.
+For more examples see the Tutorial folder, which has examples using real-world datasets for electric grid and medical domains.
 
 ## Experimental Results
 Top-3 recommended privacy algorithms for energy data:
