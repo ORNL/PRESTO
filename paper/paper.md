@@ -1,5 +1,8 @@
 ---
 title: 'PRESTO: A Python package for recomending privacy preservation algorithm based on user preferences.'
+date: 26 May 2025
+bibliography: paper/paper.bib
+---
 tags:
   - Python
   - differential privacy
@@ -134,10 +137,9 @@ DP Accuracy with 'PercentilePrivacy': 94.00%
 
 1. Pareto front for privacy budget vs accuracy
 
-![Pareto front for privacy budget vs accuracy](images/pareto_front.png){ width=0.3\textwidth float=left }
+![Pareto front for privacy budget vs accuracy](../images/pareto_front.png){ width=0.3\textwidth float=left }
 
 <div style="clear: both;"></div>
-
 
 
 # Conclusion
