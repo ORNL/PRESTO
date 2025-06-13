@@ -27,11 +27,6 @@ jobs:
           journal: joss
           paper-path: paper/paper.md
 
-      - name: Move PDF into paper folder
-        run: |
-          mkdir -p paper
-          mv paper.pdf paper/paper.pdf
-
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
