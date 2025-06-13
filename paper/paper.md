@@ -134,13 +134,10 @@ DP Accuracy with 'PercentilePrivacy': 94.00%
 
 1. Pareto front for privacy budget vs accuracy
 
-<p style="float: left; margin: 0 1em 1em 0;">
-  <img
-    src="../images/pareto_front.png"
-    alt="Pareto front for privacy budget vs accuracy"
-    width="300px"
-  />
-</p>
+![Pareto front for privacy budget vs accuracy](images/pareto_front.png){ width=0.3\textwidth float=left }
+
+<div style="clear: both;"></div>
+
 
 
 # Conclusion

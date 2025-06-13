@@ -26,6 +26,7 @@ jobs:
         with:
           journal: joss
           paper-path: paper/paper.md
+          pandoc-args: --citeproc
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
