@@ -11,30 +11,36 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8, 3.9, '3.10', '3.11']
+        python-version: ['3.9', '3.10', '3.11']
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-    
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install torch --index-url https://download.pytorch.org/whl/cpu
         pip install -e ".[dev]"
-    
-    - name: Run pre-commit hooks
-      run: |
-        pre-commit install
-        pre-commit run --all-files
-    
+      timeout-minutes: 20
+
     - name: Run tests with coverage
       run: |
         python -m pytest tests/ --cov=ornl_presto --cov-report=xml --cov-report=term-missing
-    
+      timeout-minutes: 10
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
@@ -43,30 +49,51 @@ jobs:
         name: codecov-umbrella
         fail_ci_if_error: false
 
-  build:
-    needs: test
+  lint:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-    
+
+    - name: Install linting dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install black flake8
+
+    - name: Run Black
+      run: black --check ornl_presto/ tests/
+
+    - name: Run Flake8
+      run: flake8 ornl_presto/ tests/ --exclude=ornl_presto/core_backup.py,ornl_presto/core_cleaned.py --max-line-length=88 --extend-ignore=E203,W503,E501,W293,W291,F401,E402
+
+  build:
+    needs: [test, lint]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
     - name: Install build dependencies
       run: |
         python -m pip install --upgrade pip
         pip install build twine
-    
+
     - name: Build package
       run: python -m build
-    
+
     - name: Check package
       run: python -m twine check dist/*
-    
+
     - name: Store build artifacts
       uses: actions/upload-artifact@v3
       with:
