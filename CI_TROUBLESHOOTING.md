@@ -2,7 +2,11 @@
 
 ## Common Issues and Solutions
 
-### 1. PyTorch Installation Timeouts
+### 1. Deprecated GitHub Actions
+**Problem**: "This request has been automatically failed because it uses a deprecated version of actions/upload-artifact: v3"
+**Solution**: Updated all actions to latest versions (upload-artifact@v4, setup-python@v5, cache@v4, codecov@v4).
+
+### 2. PyTorch Installation Timeouts
 **Problem**: PyTorch installation takes too long and times out in GitHub Actions.
 **Solution**: We now use CPU-only PyTorch which is much faster to install.
 
