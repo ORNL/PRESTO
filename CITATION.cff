@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
-title: "PRESTO: Privacy Recommendation and Security Optimization"
-version: "2.0.0"
+title: "PRESTO: Privacy REcommendation and SecuriTy Optimization"
+version: "2.0.2"
 doi: "10.5281/zenodo.pending"
 date-released: "2025-07-11"
 url: "https://github.com/ORNL/PRESTO"
@@ -31,7 +31,10 @@ abstract: >-
   balance data utility and privacy loss. By integrating descriptive and
   inferential statistics, Bayesian optimization, and data-similarity metrics,
   PRESTO analyzes arbitrary datasets and recommends the optimal privacy
-  algorithm and ε-parameter setting with quantified uncertainty.
+  algorithm and ε-parameter setting with quantified uncertainty. Version 2.0.2
+  introduces comprehensive medical privacy specialization with support for
+  healthcare, genomics, and clinical trial data, including HIPAA compliance
+  features and specialized tutorials for medical privacy scenarios.
 keywords:
   - "differential privacy"
   - "machine learning"
@@ -39,3 +42,24 @@ keywords:
   - "bayesian optimization"
   - "data science"
   - "python"
+  - "healthcare privacy"
+  - "genomics privacy"
+  - "clinical trials"
+  - "medical data protection"
+  - "HIPAA compliance"
+preferred-citation:
+  type: software
+  title: "PRESTO: Privacy REcommendation and SecuriTy Optimization"
+  authors:
+    - family-names: "Kotevska"
+      given-names: "Olivera"
+    - family-names: "Kusne"
+      given-names: "A. Gilad"
+    - family-names: "Balaprakash"
+      given-names: "Prasanna"
+    - family-names: "Patton"
+      given-names: "Robert"
+  version: "2.0.2"
+  doi: "10.5281/zenodo.pending"
+  date-released: "2025-07-11"
+  url: "https://github.com/ORNL/PRESTO"
