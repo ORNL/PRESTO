@@ -16,3 +16,25 @@ dist/
 
 # MacOS
 .DS_Store
+
+# SSH keys - should never be committed
+id_ed25519*
+*.key
+*.pub
+*_key
+*_key.pub
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Testing
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
