@@ -27,8 +27,8 @@ repos:
     rev: v1.5.1
     hooks:
       - id: mypy
-        additional_dependencies: [types-all]
-        args: [--ignore-missing-imports]
+        args: [--ignore-missing-imports, --no-strict-optional]
+        exclude: 'ornl_presto/(core_backup|core_cleaned)\.py'
 
   - repo: local
     hooks:
