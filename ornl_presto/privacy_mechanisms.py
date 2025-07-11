@@ -1,14 +1,30 @@
 """
 Differential privacy mechanisms for PRESTO.
 """
+
+from typing import Union, List, Tuple, Any
 import numpy as np
 import torch
 import random
 from hashlib import sha256
-from .utils import flatten_and_shape, restore_type_and_shape, ensure_tensor, fast_walsh_hadamard_transform
+from .utils import (
+    flatten_and_shape,
+    restore_type_and_shape,
+    ensure_tensor,
+    fast_walsh_hadamard_transform,
+)
+
+ArrayLike = Union[List, np.ndarray, torch.Tensor]
+
 
 # Gaussian Mechanism for Differential Privacy
-def applyDPGaussian(domain, sensitivity=1, delta=1e-5, epsilon=1, gamma=1):
+def applyDPGaussian(
+    domain: ArrayLike,
+    sensitivity: float = 1,
+    delta: float = 1e-5,
+    epsilon: float = 1,
+    gamma: float = 1,
+) -> ArrayLike:
     """
     Apply the Gaussian mechanism to privatize data.
     Args:
@@ -25,8 +41,11 @@ def applyDPGaussian(domain, sensitivity=1, delta=1e-5, epsilon=1, gamma=1):
     privatized = np.array(data) + np.random.normal(0, sigma, size=len(data))
     return restore_type_and_shape(domain, privatized.tolist(), shape)
 
+
 # Exponential Mechanism for Differential Privacy
-def applyDPExponential(domain, sensitivity=1, epsilon=1, gamma=1.0):
+def applyDPExponential(
+    domain: ArrayLike, sensitivity: float = 1, epsilon: float = 1, gamma: float = 1.0
+) -> ArrayLike:
     """
     Apply the Exponential mechanism to privatize data.
     Args:
@@ -44,8 +63,11 @@ def applyDPExponential(domain, sensitivity=1, epsilon=1, gamma=1.0):
     priv = np.array(data) + noise * signs
     return restore_type_and_shape(domain, priv.tolist(), shape)
 
+
 # Laplace Mechanism for Differential Privacy
-def applyDPLaplace(domain, sensitivity=1, epsilon=1, gamma=1):
+def applyDPLaplace(
+    domain: ArrayLike, sensitivity: float = 1, epsilon: float = 1, gamma: float = 1
+) -> ArrayLike:
     """
     Apply the Laplace mechanism to privatize data.
     Args:
@@ -61,19 +83,23 @@ def applyDPLaplace(domain, sensitivity=1, epsilon=1, gamma=1):
     privatized = np.array(data) + noise
     return restore_type_and_shape(domain, privatized.tolist(), shape)
 
+
 # Helper for Sparse Vector Technique (SVT)
-def above_threshold_SVT(val, domain_list, T, epsilon):
+def above_threshold_SVT(
+    val: float, domain_list: List[float], T: float, epsilon: float
+) -> bool:
     """
     Helper function for SVT: returns value if above noisy threshold, else random value.
     """
-    T_hat = T + np.random.laplace(0, 2/epsilon)
-    nu_i = np.random.laplace(0, 4/epsilon)
+    T_hat = T + np.random.laplace(0, 2 / epsilon)
+    nu_i = np.random.laplace(0, 4 / epsilon)
     if val + nu_i >= T_hat:
         return val
     return random.choice(domain_list)
 
+
 # Sparse Vector Technique (SVT) for Differential Privacy
-def applySVTAboveThreshold_full(domain, epsilon):
+def applySVTAboveThreshold_full(domain: ArrayLike, epsilon: float) -> ArrayLike:
     """
     Apply the full SVT to privatize data.
     Args:
@@ -87,8 +113,9 @@ def applySVTAboveThreshold_full(domain, epsilon):
     privatized = [above_threshold_SVT(val, data_list, T, epsilon) for val in data_list]
     return restore_type_and_shape(domain, privatized, shape)
 
+
 # Percentile Privacy Mechanism
-def percentilePrivacy(domain, percentile=50):
+def percentilePrivacy(domain: ArrayLike, percentile: float = 50) -> ArrayLike:
     """
     Apply percentile privacy: values below the percentile are zeroed.
     Args:
@@ -105,8 +132,9 @@ def percentilePrivacy(domain, percentile=50):
     result = np.where(arr >= threshold, arr, 0)
     return restore_type_and_shape(domain, result.tolist(), shape)
 
+
 # Count Mean Sketch with Laplace Noise
-def count_mean_sketch(data, epsilon: float, bins: int = 10) -> torch.Tensor:
+def count_mean_sketch(data: ArrayLike, epsilon: float, bins: int = 10) -> torch.Tensor:
     """
     Estimate the mean using a histogram with Laplace noise.
     Args:
@@ -123,13 +151,14 @@ def count_mean_sketch(data, epsilon: float, bins: int = 10) -> torch.Tensor:
     scale = 1.0 / epsilon
     noise = torch.distributions.Laplace(0, scale).sample(counts.size()).to(data.device)
     noisy = counts.float() + noise
-    edges = torch.linspace(min_val, max_val, steps=bins+1, device=data.device)
+    edges = torch.linspace(min_val, max_val, steps=bins + 1, device=data.device)
     centers = (edges[:-1] + edges[1:]) / 2
     mean_est = (noisy * centers).sum() / noisy.sum()
     return torch.full_like(data, mean_est)
 
+
 # Hadamard Mechanism for Differential Privacy
-def hadamard_mechanism(data, epsilon: float) -> torch.Tensor:
+def hadamard_mechanism(data: ArrayLike, epsilon: float) -> torch.Tensor:
     """
     Apply the Hadamard mechanism: add Laplace noise in the Hadamard domain.
     Args:
@@ -150,8 +179,9 @@ def hadamard_mechanism(data, epsilon: float) -> torch.Tensor:
     x_noisy = fast_walsh_hadamard_transform(y_noisy) / np.sqrt(m)
     return x_noisy[:n]
 
+
 # Hadamard Response (Local DP)
-def hadamard_response(data, epsilon: float) -> torch.Tensor:
+def hadamard_response(data: ArrayLike, epsilon: float) -> torch.Tensor:
     """
     Local-DP via randomized response in the Hadamard domain.
     Args:
@@ -167,8 +197,9 @@ def hadamard_response(data, epsilon: float) -> torch.Tensor:
     rand = torch.randint(0, d, data.size(), device=data.device)
     return torch.where(flip.bool(), data.long(), rand)
 
+
 # RAPPOR Mechanism (Bloom filter + randomized response)
-def rappor(data, epsilon: float, m: int = 16, k: int = 2) -> torch.Tensor:
+def rappor(data: ArrayLike, epsilon: float, m: int = 16, k: int = 2) -> torch.Tensor:
     """
     Basic RAPPOR: Bloom filter encoding + randomized response.
     Args:
@@ -194,23 +225,24 @@ def rappor(data, epsilon: float, m: int = 16, k: int = 2) -> torch.Tensor:
     out = priv.int().sum(dim=1).float() / p
     return out
 
-def get_noise_generators():
+
+def get_noise_generators() -> dict:
     """
     Return a dictionary of available privacy mechanisms.
     Returns:
         dict: Mapping of mechanism names to their functions.
     """
     return {
-        'DP_Gaussian': applyDPGaussian,
-        'DP_Exponential': applyDPExponential,
-        'DP_Laplace': applyDPLaplace,
-        'gaussian': applyDPGaussian,
-        'exponential': applyDPExponential,
-        'laplace': applyDPLaplace,
-        'svt': applySVTAboveThreshold_full,
-        'percentile': percentilePrivacy,
-        'count_mean_sketch': count_mean_sketch,
-        'hadamard': hadamard_mechanism,
-        'hadamard_response': hadamard_response,
-        'rappor': rappor
+        "DP_Gaussian": applyDPGaussian,
+        "DP_Exponential": applyDPExponential,
+        "DP_Laplace": applyDPLaplace,
+        "gaussian": applyDPGaussian,
+        "exponential": applyDPExponential,
+        "laplace": applyDPLaplace,
+        "svt": applySVTAboveThreshold_full,
+        "percentile": percentilePrivacy,
+        "count_mean_sketch": count_mean_sketch,
+        "hadamard": hadamard_mechanism,
+        "hadamard_response": hadamard_response,
+        "rappor": rappor,
     }
