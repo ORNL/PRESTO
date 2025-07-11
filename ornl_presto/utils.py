@@ -62,6 +62,8 @@ def restore_type_and_shape(reference, flat_list, shape):
     arr = np.array(flat_list).reshape(shape)
     if isinstance(reference, torch.Tensor):
         return torch.from_numpy(arr).to(dtype=reference.dtype, device=reference.device)
+    elif isinstance(reference, np.ndarray):
+        return arr
     return arr.tolist()
 
 
