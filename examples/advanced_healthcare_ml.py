@@ -118,11 +118,11 @@ def generate_healthcare_data(n_patients=1000):
 
 
 def main():
-    print("🏥 PRESTO Advanced Healthcare Privacy Analysis")
+    print("PRESTO Advanced Healthcare Privacy Analysis")
     print("=" * 60)
 
     # Generate synthetic healthcare dataset
-    print("📊 Generating synthetic healthcare data...")
+    print("Generating synthetic healthcare data...")
     features, labels = generate_healthcare_data(n_patients=500)
 
     # Focus on heart rate data for privacy analysis
@@ -137,7 +137,7 @@ def main():
     print()
 
     # Step 1: Comprehensive privacy analysis
-    print("🔍 Step 1: Comprehensive Privacy Algorithm Analysis")
+    print("Step 1: Comprehensive Privacy Algorithm Analysis")
     print("-" * 50)
 
     # Test multiple epsilon values
@@ -172,7 +172,7 @@ def main():
         )
 
     # Step 2: Detailed algorithm comparison
-    print("\n🧪 Step 2: Detailed Algorithm Analysis")
+    print("\nStep 2: Detailed Algorithm Analysis")
     print("-" * 40)
 
     target_epsilon = 1.0
@@ -205,7 +205,7 @@ def main():
             print(f"{algo_name:20s}: Error - {str(e)[:40]}...")
 
     # Step 3: Healthcare-specific privacy requirements
-    print("\n🏥 Step 3: Healthcare Privacy Requirements Analysis")
+    print("\nStep 3: Healthcare Privacy Requirements Analysis")
     print("-" * 50)
 
     # HIPAA-like privacy levels
@@ -286,7 +286,7 @@ def main():
             print(f"{config['name']:15s}: Error - {str(e)[:30]}...")
 
     # Step 5: Production recommendations
-    print("\n🚀 Step 5: Production Deployment Recommendations")
+    print("\nStep 5: Production Deployment Recommendations")
     print("-" * 50)
 
     print("\nFor healthcare data deployment:")
@@ -297,7 +297,7 @@ def main():
     print("• Monitor utility preservation > 80%")
     print("• Use confidence intervals for uncertainty quantification")
 
-    print("\n📊 Generating final comparison visualization...")
+    print("\nGenerating final comparison visualization...")
 
     # Final visualization
     best_algorithm = recommend_top3(
@@ -313,7 +313,7 @@ def main():
     )
 
     print("\n[SUCCESS] Advanced Analysis Complete!")
-    print("📝 See generated plots for detailed privacy-utility analysis")
+    print("See generated plots for detailed privacy-utility analysis")
 
 
 if __name__ == "__main__":

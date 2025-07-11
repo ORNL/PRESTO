@@ -389,7 +389,7 @@ class PRESTOBenchmark:
 def run_comprehensive_benchmark():
     """Run a comprehensive benchmark suite."""
 
-    print("🚀 PRESTO Comprehensive Benchmark Suite")
+    print("PRESTO Comprehensive Benchmark Suite")
     print("=" * 50)
 
     benchmark = PRESTOBenchmark()
@@ -425,7 +425,7 @@ def run_comprehensive_benchmark():
     scalability_df.to_csv("presto_scalability_results.csv", index=False)
 
     print("\n[SUCCESS] Benchmark complete!")
-    print("📊 Results saved to CSV files and performance plots generated")
+    print("Results saved to CSV files and performance plots generated")
 
     return performance_df, scalability_df, quality_results
 

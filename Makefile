@@ -1,5 +1,5 @@
 # PRESTO Development Makefile
-.PHONY: help test test-verbose coverage clean lint format mypy install dev-install pre-commit
+.PHONY: help test test-verbose coverage clean lint format mypy install dev-install pre-commit docs docs-serve docs-check
 
 help:  ## Show this help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -43,16 +43,29 @@ clean:  ## Clean up build artifacts
 	rm -rf .pytest_cache/
 	rm -rf .mypy_cache/
 	rm -rf htmlcov/
+	rm -rf docs/_build/
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
 
 build:  ## Build package
 	python -m build
 
-docs:  ## Generate documentation (if docs exist)
-	@echo "Documentation generation not yet implemented"
+# Documentation targets
+install-docs-deps:  ## Install documentation dependencies
+	pip install -r docs/requirements.txt
 
-ci:  ## Run full CI pipeline locally
-	$(MAKE) clean
-	$(MAKE) quality
-	$(MAKE) coverage
+docs:  ## Build documentation
+	@echo "Building documentation..."
+	@sphinx-build -b html docs docs/_build/html
+	@echo "Documentation built. Open docs/_build/html/index.html to view."
+
+docs-serve: docs  ## Serve documentation locally
+	@echo "Serving documentation at http://localhost:8000"
+	@cd docs/_build/html && python -m http.server 8000
+
+docs-check:  ## Check documentation for errors
+	@echo "Checking documentation for errors..."
+	@sphinx-build -b linkcheck docs docs/_build/linkcheck
+
+docs-clean:  ## Clean documentation build
+	rm -rf docs/_build/

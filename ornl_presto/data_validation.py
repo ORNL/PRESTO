@@ -500,10 +500,10 @@ if __name__ == "__main__":
     print(f"Recommendations: {len(results['recommendations'])}")
 
     for warning in results["warnings"]:
-        print(f"  ⚠️  {warning}")
+        print(f"  WARNING: {warning}")
 
     for rec in results["recommendations"]:
-        print(f"  💡 {rec}")
+        print(f"  {rec}")
 
     # Preprocess
     print("\nPreprocessing...")

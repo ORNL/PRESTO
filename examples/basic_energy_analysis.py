@@ -47,7 +47,7 @@ def main():
 
     data = torch.tensor(energy_data, dtype=torch.float32)
 
-    print("🏠 PRESTO Energy Privacy Analysis")
+    print("PRESTO Energy Privacy Analysis")
     print("=" * 50)
     print(f"Dataset: {len(data)} hourly energy readings")
     print(f"Mean consumption: {data.mean():.2f} kWh")
@@ -55,16 +55,16 @@ def main():
     print()
 
     # Step 1: Visualize original data
-    print("📊 Step 1: Visualizing original energy data...")
+    print("Step 1: Visualizing original energy data...")
     visualize_data(data, title="Original Energy Consumption Distribution")
 
     # Step 2: Get top-3 algorithm recommendations
-    print("🔍 Step 2: Finding optimal privacy algorithms...")
+    print("Step 2: Finding optimal privacy algorithms...")
     print("Running Bayesian optimization (this may take a moment)...")
 
     top3 = recommend_top3(data, n_evals=3, init_points=2, n_iter=5)
 
-    print("\n🏆 Top-3 Recommended Privacy Algorithms:")
+    print("\nTop-3 Recommended Privacy Algorithms:")
     print("-" * 60)
     for rank, rec in enumerate(top3, start=1):
         print(f"{rank}. {rec['algorithm']}")
@@ -76,19 +76,19 @@ def main():
         print()
 
     # Step 3: Visualize top-3 recommendations
-    print("📈 Step 3: Visualizing algorithm comparison...")
+    print("Step 3: Visualizing algorithm comparison...")
     visualize_top3(top3)
 
     # Step 4: Show confidence intervals
-    print("📏 Step 4: Analyzing confidence intervals...")
+    print("Step 4: Analyzing confidence intervals...")
     visualize_confidence_top3(data, top3, n_evals=5)
 
     # Step 5: Compare original vs privatized data
-    print("🔒 Step 5: Comparing original vs privatized distributions...")
+    print("Step 5: Comparing original vs privatized distributions...")
     visualize_overlay_original_and_private(data, top3)
 
     # Step 6: Algorithm analysis
-    print("🧠 Step 6: Algorithm Analysis")
+    print("Step 6: Algorithm Analysis")
     print("-" * 40)
 
     for i, rec in enumerate(top3):
@@ -121,7 +121,7 @@ def main():
 
     print("\n[SUCCESS] Analysis Complete!")
     print(
-        "💡 Recommendation: Use",
+        "Recommendation: Use",
         top3[0]["algorithm"],
         f"with ε={top3[0]['epsilon']:.3f} for optimal privacy-utility balance",
     )

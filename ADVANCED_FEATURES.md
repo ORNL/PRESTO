@@ -102,10 +102,10 @@ print(f"Recommendations: {len(results['recommendations'])}")
 
 # View specific issues
 for warning in results['warnings']:
-    print(f"⚠️  {warning}")
+    print(f"{warning}")
 
 for rec in results['recommendations']:
-    print(f"💡 {rec}")
+    print(f"{rec}")
 ```
 
 ### Smart Preprocessing

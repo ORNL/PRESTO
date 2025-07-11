@@ -5,7 +5,11 @@ Visualization functions for PRESTO.
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from .metrics import similarity_metrics, evaluate_algorithm_confidence
+from .metrics import (
+    evaluate_algorithm_confidence,
+    calculate_similarity_score,
+    similarity_metrics,
+)
 from .privacy_mechanisms import get_noise_generators
 
 
