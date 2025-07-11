@@ -59,11 +59,6 @@
       "resource_type": "software"
     }
   ],
-  "grants": [
-    {
-      "id": "DE-AC05-00OR22725"
-    }
-  ],
   "references": [
     "Dwork, C., & Roth, A. (2014). The algorithmic foundations of differential privacy. Foundations and Trends in Theoretical Computer Science, 9(3-4), 211-407.",
     "Abadi, M., et al. (2016). Deep learning with differential privacy. Proceedings of the 2016 ACM SIGSAC conference on computer and communications security, 308-318."

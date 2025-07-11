@@ -25,7 +25,7 @@ authors:
     given-names: "Robert"
     orcid: "https://orcid.org/0000-0002-8101-0571"
     affiliation: "Oak Ridge National Laboratory"
-  abstract: >-
+abstract: >-
   PRESTO (Privacy REcommendation and SecuriTy Optimization) is a Python-based
   toolkit that automates the selection of differential-privacy mechanisms to
   balance data utility and privacy loss. By integrating descriptive and
