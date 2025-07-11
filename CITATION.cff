@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "PRESTO: Privacy Recommendation and Security Optimization"
+version: "2.0.0"
+doi: "10.5281/zenodo.pending"
+date-released: "2025-07-11"
+url: "https://github.com/ORNL/PRESTO"
+repository-code: "https://github.com/ORNL/PRESTO"
+license: MIT
+authors:
+  - family-names: "Kotevska"
+    given-names: "Olivera"
+    orcid: "https://orcid.org/0000-0003-1677-2243"
+    affiliation: "Oak Ridge National Laboratory"
+  - family-names: "Kusne"
+    given-names: "A. Gilad"
+    orcid: "https://orcid.org/0000-0001-8904-2087"
+    affiliation: "National Institute of Standards and Technology"
+  - family-names: "Balaprakash"
+    given-names: "Prasanna"
+    orcid: "https://orcid.org/0000-0002-0292-5715"
+    affiliation: "Oak Ridge National Laboratory"
+  - family-names: "Patton"
+    given-names: "Robert"
+    orcid: "https://orcid.org/0000-0002-8101-0571"
+    affiliation: "Oak Ridge National Laboratory"
+abstract: >-
+  PRESTO (Privacy REcommendation and SecuriTy Optimization) is a Python-based
+  toolkit that automates the selection of differential-privacy mechanisms to
+  balance data utility and privacy loss. By integrating descriptive and
+  inferential statistics, Bayesian optimization, and data-similarity metrics,
+  PRESTO analyzes arbitrary datasets and recommends the optimal privacy
+  algorithm and ε-parameter setting with quantified uncertainty.
+keywords:
+  - "differential privacy"
+  - "machine learning"
+  - "privacy-preserving"
+  - "bayesian optimization"
+  - "data science"
+  - "python"

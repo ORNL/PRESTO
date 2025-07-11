@@ -1,6 +1,6 @@
 ---
-title: 'PRESTO: A Python package for recommending privacy preservation algorithm based on user preferences.'
-date: 26 May 2025
+title: 'PRESTO: A Python package for automated privacy mechanism selection and optimization'
+date: 11 July 2025
 bibliography: paper.bib
 
 tags:
@@ -49,8 +49,8 @@ PRESTO advances the state of the art by unifying statistical dataset analysis, B
 2. **Mechanism Library**
 
     - Maintain a dictionary of privacy functions (`get_noise_generators()`), each mapping `(data, \varepsilon) → privatized_data`.
-  
-   
+
+
 3. **Bayesian Optimization of $\varepsilon$**
 
     - For each mechanism, define:
@@ -77,19 +77,19 @@ PRESTO advances the state of the art by unifying statistical dataset analysis, B
         $$
 
 
-5. **Similarity Assessment**  
+5. **Similarity Assessment**
 
-   - Measure distributional similarity via Kolmogorov–Smirnov, Jensen–Shannon, Pearson correlation.  
-   
-6. **Multi‐Objective Ranking**  
+   - Measure distributional similarity via Kolmogorov–Smirnov, Jensen–Shannon, Pearson correlation.
+
+6. **Multi‐Objective Ranking**
 
    - Recommend top mechanisms on **max similarity**, **max reliability**, and **max privacy** axes.
-   
+
 
 # Experiments
-We conducted experiments to evaluate the effectiveness of our approach.
+We evaluated PRESTO's effectiveness across diverse domains and data types, demonstrating its automated mechanism selection and optimization capabilities.
 
-### Energy Compumtion with Bayesian Optimization (Dataset: Hourly Consumption (Min))
+## Energy Consumption Analysis (Dataset: Hourly Energy Usage, 168 points)
 
 ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/energy.png)
 
@@ -99,7 +99,7 @@ Top-3 Recommendations:
    - **DP_Exponential:** $\varepsilon=3.6300$, mean_rmse=0.3835, ci_width=0.0416, reliability=62.68
    - **DP_Gaussian:** $\varepsilon=4.1687$, mean_rmse=0.8326, ci_width=0.0525, reliability=22.88
 
-### Medical Measuments with Bayesian Optimization (Dataset: Heart Rate (Min))
+## Medical Measurements Analysis (Dataset: Heart Rate Monitoring, 1440 points)
 
 ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/medical.png)
 
@@ -110,7 +110,7 @@ Top-3 Recommendations:
    - **DP_Gaussian:** $\varepsilon=5.0000$, mean_rmse=0.6824, ci_width=0.0047, reliability=311.79
 
 
-### Finance Transactions with Bayesian Optimization (Dataset: Payment Transactions (Min))
+## Financial Transaction Analysis (Dataset: Log-Normal Payment Data, 10,000 points)
 
 ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/finance.png)
 
@@ -120,7 +120,7 @@ Top-3 Recommendations:
    - **DP_Exponential:** $\varepsilon=3.6296$, mean_rmse=0.3864, ci_width=0.0453, reliability=57.13
    - **DP_Gaussian:** $\varepsilon=4.1690$, mean_rmse=0.8270, ci_width=0.0560, reliability=21.59
 
-### Sensor Temperature Time‐Series with Bayesian Optimization (Dataset: Payment Transactions (Min))
+## IoT Sensor Analysis (Dataset: Temperature Time-Series, 168 points)
 
 ![Privacy loss (epsilon) vs utility (RMSE) for selected/preferred privacy algorithms](../images/energy.png)
 
@@ -131,7 +131,7 @@ Top-3 Recommendations:
    - **DP_Gaussian:** $\varepsilon=3.6296$, mean_rmse=0.9459, ci_width=0.0334, reliability=31.65
 
 
-### Energy Consumption with Fixed epsilon = 1
+## Fixed Privacy Budget Analysis (ε = 1)
 
 ![The best algorithm for a given epsilon](../images/fixedeps.png)
 
@@ -139,12 +139,12 @@ Top-3 Recommendations:
 - Best by Reliability: {'algorithm': 'PercentilePrivacy', 'score': inf}
 - Best by Privacy:     {'algorithm': 'Hadamard_Mechanism', 'score': 71.6581}
 
-### ML Classification with Private Gradients
+## Machine Learning Integration: Privacy-Preserving Neural Network Training
 
 - Baseline Accuracy (no privacy): 93.00%
 - DP Accuracy with 'PercentilePrivacy': 94.00%
 
-### ML Classification with Private Gradients
+## Multi-Objective Optimization: Pareto Front Analysis
 
 ![Pareto front for privacy budget vs accuracy](../images/pareto_front.png){ width=650px float=left }
 
@@ -154,6 +154,6 @@ PRESTO delivers a data-driven, automated, and extensible framework for different
 
 # Acknowledgements
 This manuscript has been co-authored by UT-Battelle, LLC under Contract No. DE-AC05-00OR22725 with the U.S. Department of Energy. The United States Government retains and the publisher, by accepting the article for publication, acknowledges that the United States Government retains a non-exclusive, paid-up, irrevocable, world-wide license to publish or reproduce the published form of this manuscript, or allow others to do so, for United States Government purposes. The Department of Energy will provide public access to these results of federally sponsored research in accordance with the DOE Public Access Plan (http://energy.gov/downloads/doe-public-access-plan).
-This material is based upon work supported by the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research under Contract No. DE-AC05-00OR22725. This research is sponsored by the Artificial Intelligence Initiative as part of the LDRD-SEED Program, at ORNL, managed by UT-Battelle, LLC and DOE ASCR Program. 
+This material is based upon work supported by the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research under Contract No. DE-AC05-00OR22725. This research is sponsored by the Artificial Intelligence Initiative as part of the LDRD-SEED Program, at ORNL, managed by UT-Battelle, LLC and DOE ASCR Program.
 
 # References
