@@ -93,9 +93,11 @@ class DataValidator:
             "kurtosis": float(stats.kurtosis(data)),
             "range": float(np.max(data) - np.min(data)),
             "iqr": float(np.percentile(data, 75) - np.percentile(data, 25)),
-            "coefficient_of_variation": float(np.std(data) / np.abs(np.mean(data)))
-            if np.mean(data) != 0
-            else float("inf"),
+            "coefficient_of_variation": (
+                float(np.std(data) / np.abs(np.mean(data)))
+                if np.mean(data) != 0
+                else float("inf")
+            ),
         }
 
     def _analyze_distribution(self, data: np.ndarray, results: Dict[str, Any]):
@@ -107,13 +109,15 @@ class DataValidator:
                 stat, p_value = stats.shapiro(data[:5000])  # Limit for performance
                 if p_value > 0.05:
                     results["recommendations"].append(
-                        "Data appears normally distributed - Gaussian mechanism recommended"
+                        "Data appears normally distributed - "
+                        "Gaussian mechanism recommended"
                     )
                 else:
                     results["recommendations"].append(
-                        "Data is not normally distributed - consider Laplace or Exponential mechanisms"
+                        "Data is not normally distributed - "
+                        "consider Laplace or Exponential mechanisms"
                     )
-            except:
+            except Exception:
                 results["warnings"].append("Could not perform normality test")
 
         # Distribution characteristics
@@ -132,11 +136,13 @@ class DataValidator:
         kurt = results["statistics"]["kurtosis"]
         if kurt > 3:
             results["warnings"].append(
-                "Heavy-tailed distribution detected - outliers may affect privacy mechanisms"
+                "Heavy-tailed distribution detected - "
+                "outliers may affect privacy mechanisms"
             )
         elif kurt < -1:
             results["warnings"].append(
-                "Light-tailed distribution detected - may have limited natural variation"
+                "Light-tailed distribution detected - "
+                "may have limited natural variation"
             )
 
         # Variance analysis
@@ -354,7 +360,7 @@ class DataPreprocessor:
             try:
                 transformed, _ = stats.boxcox(data + 1 - np.min(data))
                 return transformed
-            except:
+            except Exception:
                 warnings.warn("Box-Cox transformation failed, skipping")
                 return data
 
