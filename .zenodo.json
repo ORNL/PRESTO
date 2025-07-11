@@ -1,0 +1,56 @@
+{
+  "title": "PRESTO: Privacy REcommendation and SecuriTy Optimization",
+  "description": "A Python package that provides intelligent recommendations for optimal differential privacy algorithms based on user preferences and dataset characteristics. PRESTO uses Bayesian optimization to automatically determine the best privacy preservation algorithm, privacy loss parameters, confidence intervals, and reliability scores for a given dataset.",
+  "creators": [
+    {
+      "name": "Kotevska, Olivera",
+      "affiliation": "Oak Ridge National Laboratory",
+      "orcid": "0000-0000-0000-0000"
+    }
+  ],
+  "keywords": [
+    "differential privacy",
+    "privacy preservation",
+    "machine learning",
+    "Bayesian optimization",
+    "data privacy",
+    "algorithm recommendation",
+    "privacy-utility tradeoff",
+    "healthcare privacy",
+    "genomics privacy",
+    "clinical trials",
+    "ORNL"
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open",
+  "language": "eng",
+  "subjects": [
+    {
+      "term": "Computer Science - Cryptography and Security",
+      "identifier": "cs.CR",
+      "scheme": "arXiv"
+    },
+    {
+      "term": "Computer Science - Machine Learning",
+      "identifier": "cs.LG",
+      "scheme": "arXiv"
+    }
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/ORNL/PRESTO",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ],
+  "grants": [
+    {
+      "id": "DE-AC05-00OR22725"
+    }
+  ],
+  "references": [
+    "Dwork, C., & Roth, A. (2014). The algorithmic foundations of differential privacy. Foundations and Trends in Theoretical Computer Science, 9(3-4), 211-407.",
+    "Abadi, M., et al. (2016). Deep learning with differential privacy. Proceedings of the 2016 ACM SIGSAC conference on computer and communications security, 308-318."
+  ]
+}
