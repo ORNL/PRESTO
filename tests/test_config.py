@@ -3,13 +3,11 @@ Tests for PRESTO configuration management.
 """
 
 import pytest
-import json
 import tempfile
 import os
 from ornl_presto.config import (
     PRESTOConfig,
     PrivacyConfig,
-    OptimizationConfig,
     ConfigManager,
     get_domain_recommendations,
 )
@@ -26,7 +24,7 @@ class TestPRESTOConfig:
         assert config.privacy.epsilon_max == 10.0
         assert config.optimization.n_evals == 10
         assert config.random_seed == 42
-        assert config.verbose == True
+        assert config.verbose is True
 
     def test_privacy_config_customization(self):
         """Test privacy configuration customization."""
@@ -149,7 +147,7 @@ def test_config_integration():
     # Test development config
     dev_config = ConfigManager.get_config("development")
     assert dev_config.optimization.n_evals == 3
-    assert dev_config.verbose == True
+    assert dev_config.verbose is True
 
     # Test IoT config
     iot_config = ConfigManager.get_config("iot_sensors")

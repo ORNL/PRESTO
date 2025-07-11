@@ -6,9 +6,8 @@ Provides standardized configurations for different use cases and deployment scen
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Any
 import json
-import os
 
 
 @dataclass
@@ -363,7 +362,7 @@ def print_config_guide():
         print(f"  Description: {info['description']}")
         print(f"  Privacy Level: {info['privacy_level']}")
         print(f"  Recommended ε: {info['recommended_epsilon']}")
-        print(f"  Key Considerations:")
+        print("  Key Considerations:")
         for consideration in info["key_considerations"]:
             print(f"    - {consideration}")
 

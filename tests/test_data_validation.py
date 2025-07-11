@@ -22,7 +22,7 @@ class TestDataValidator:
         validator = DataValidator()
         results = validator.validate_data(data)
 
-        assert results["valid"] == True
+        assert results["valid"] is True
         assert len(results["errors"]) == 0
         assert "statistics" in results
         assert results["statistics"]["size"] == 100
@@ -33,7 +33,7 @@ class TestDataValidator:
         validator = DataValidator(min_size=10)
         results = validator.validate_data(data)
 
-        assert results["valid"] == False
+        assert results["valid"] is False
         assert len(results["errors"]) > 0
         assert any("too small" in error.lower() for error in results["errors"])
 
@@ -43,7 +43,7 @@ class TestDataValidator:
         validator = DataValidator()
         results = validator.validate_data(data)
 
-        assert results["valid"] == False
+        assert results["valid"] is False
         assert any("NaN" in error for error in results["errors"])
 
     def test_data_with_inf(self):
@@ -52,7 +52,7 @@ class TestDataValidator:
         validator = DataValidator()
         results = validator.validate_data(data)
 
-        assert results["valid"] == False
+        assert results["valid"] is False
         assert any("infinite" in error for error in results["errors"])
 
     def test_statistics_calculation(self):
@@ -91,7 +91,7 @@ class TestDataValidator:
         validator = DataValidator()
         results = validator.validate_data(data)
 
-        assert results["valid"] == False
+        assert results["valid"] is False
         assert any("constant" in error.lower() for error in results["errors"])
 
 
@@ -204,7 +204,7 @@ class TestPreprocessingRecommendations:
 
         recommendations = recommend_preprocessing_strategy(data)
 
-        assert recommendations["handle_outliers"] == True
+        assert recommendations["handle_outliers"] is True
         assert any(
             "outlier" in rationale.lower() for rationale in recommendations["rationale"]
         )
@@ -222,7 +222,7 @@ class TestIntegratedValidationPreprocessing:
         assert isinstance(processed_data, torch.Tensor)
         assert "validation" in info
         assert "preprocessing" in info
-        assert info["validation"]["valid"] == True
+        assert info["validation"]["valid"] is True
 
     def test_validate_and_preprocess_invalid_data(self):
         """Test with invalid data."""
@@ -250,17 +250,17 @@ def test_different_input_types():
     data_list = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0]
     validator = DataValidator()
     results = validator.validate_data(data_list)
-    assert results["valid"] == True
+    assert results["valid"] is True
 
     # Test with numpy array
     data_np = np.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0])
     results = validator.validate_data(data_np)
-    assert results["valid"] == True
+    assert results["valid"] is True
 
     # Test with torch tensor
     data_torch = torch.tensor([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0])
     results = validator.validate_data(data_torch)
-    assert results["valid"] == True
+    assert results["valid"] is True
 
 
 if __name__ == "__main__":
