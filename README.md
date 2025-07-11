@@ -1,5 +1,10 @@
 ![# PRESTO](images/PRESTO-logo-tagline-no-bg.png)
 
+[![CI/CD Pipeline](https://github.com/ORNL/PRESTO/actions/workflows/ci.yml/badge.svg)](https://github.com/ORNL/PRESTO/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-81%25-brightgreen)](https://github.com/ORNL/PRESTO)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 # PRESTO
 PRESTO: Privacy REcommendation and SecuriTy Optimization is a Python package that provides recomendation for the best privacy preservation algorithm based on user preferences. Traditional privacy preservation libraries provide an implementation of a set of algorithms but the user need to experiment and detemine which of them is the best for the given dataset. PRESTO provives recomendation of the top best algorithms and compares all the given algorithms so it is easier for the user to decide.
 
@@ -111,7 +116,7 @@ Visualization of original, private, and similarity metrics ![Visualization metri
 - `visualize_confidence(domain, key, epsilon, n_evals=10, **params)`: Visualize confidence for top algorithm.
 - `visualize_confidence_top3(domain, recommendations, n_evals=10)`: Visualize the Confidence Intervals for Top-3 Mechanisms.
 - `visualize_overlay_original_and_private(domain, top3)`: Visualize overlay Original vs Top-3 Privatized Distributions.
-  
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
@@ -121,4 +126,3 @@ This material is based upon work supported by the U.S. Department of Energy, Off
 
 ## References
 Dwork, C., & Roth, A. (2014). The algorithmic foundations of differential privacy. Foundations and Trends® in Theoretical Computer Science, 9(3–4), 211-407.
-
