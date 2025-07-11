@@ -42,6 +42,25 @@ from .core import (
     dp_hyper,
 )
 
+# Configuration management
+from .config import (
+    PRESTOConfig,
+    PrivacyConfig,
+    OptimizationConfig,
+    DataConfig,
+    VisualizationConfig,
+    ConfigManager,
+    get_domain_recommendations,
+)
+
+# Data validation and preprocessing
+from .data_validation import (
+    DataValidator,
+    DataPreprocessor,
+    validate_and_preprocess,
+    recommend_preprocessing_strategy,
+)
+
 __version__ = "1.0.0"
 __author__ = "ORNL PRESTO Team"
 __all__ = [
@@ -77,4 +96,17 @@ __all__ = [
     "dp_pareto_front",
     "gpr_gpytorch",
     "dp_hyper",
+    # Configuration management
+    "PRESTOConfig",
+    "PrivacyConfig",
+    "OptimizationConfig",
+    "DataConfig",
+    "VisualizationConfig",
+    "ConfigManager",
+    "get_domain_recommendations",
+    # Data validation and preprocessing
+    "DataValidator",
+    "DataPreprocessor",
+    "validate_and_preprocess",
+    "recommend_preprocessing_strategy",
 ]
