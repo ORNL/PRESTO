@@ -424,7 +424,7 @@ def run_comprehensive_benchmark():
     performance_df.to_csv("presto_benchmark_results.csv", index=False)
     scalability_df.to_csv("presto_scalability_results.csv", index=False)
 
-    print("\n✅ Benchmark complete!")
+    print("\n[SUCCESS] Benchmark complete!")
     print("📊 Results saved to CSV files and performance plots generated")
 
     return performance_df, scalability_df, quality_results

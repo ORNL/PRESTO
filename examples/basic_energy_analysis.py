@@ -119,7 +119,7 @@ def main():
         print(f"  Utility score: {rec['score']:.4f}")
         print(f"  Confidence: ±{rec['ci_width']:.4f}")
 
-    print("\n✅ Analysis Complete!")
+    print("\n[SUCCESS] Analysis Complete!")
     print(
         "💡 Recommendation: Use",
         top3[0]["algorithm"],

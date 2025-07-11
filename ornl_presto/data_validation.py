@@ -514,4 +514,4 @@ if __name__ == "__main__":
     print(f"Outliers removed: {info['preprocessing']['outliers_removed']}")
     print(f"Steps applied: {info['preprocessing']['steps_applied']}")
 
-    print("\n✅ Validation and preprocessing complete!")
+    print("\n[SUCCESS] Validation and preprocessing complete!")

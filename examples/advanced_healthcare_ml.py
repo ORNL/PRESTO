@@ -312,7 +312,7 @@ def main():
         heart_rate_data, best_algorithm["algorithm"], best_algorithm["epsilon"]
     )
 
-    print("\n✅ Advanced Analysis Complete!")
+    print("\n[SUCCESS] Advanced Analysis Complete!")
     print("📝 See generated plots for detailed privacy-utility analysis")
 
 

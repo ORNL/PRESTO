@@ -200,7 +200,7 @@ for i, rec in enumerate(filtered_top3, 1):
     compliant = (config.privacy.epsilon_min <= rec['epsilon'] <= config.privacy.epsilon_max)
     utility_ok = rec.get('utility_preservation', 0) >= config.privacy.utility_threshold
 
-    status = "✅ COMPLIANT" if compliant and utility_ok else "❌ NON-COMPLIANT"
+    status = "[COMPLIANT]" if compliant and utility_ok else "[NON-COMPLIANT]"
     print(f"{i}. {rec['algorithm']} (ε={rec['epsilon']:.3f}) {status}")
 
 # Visualize results
@@ -489,13 +489,13 @@ def validate_privacy_service():
             # Validate privacy was applied (data should be different)
             assert not torch.allclose(test_data, result['private_data'], atol=1e-6)
 
-            print(f"✅ Test case {i+1} passed")
+            print(f"[PASS] Test case {i+1} passed")
 
         except Exception as e:
-            print(f"❌ Test case {i+1} failed: {e}")
+            print(f"[FAIL] Test case {i+1} failed: {e}")
             return False
 
-    print("✅ All health checks passed")
+    print("[SUCCESS] All health checks passed")
     return True
 
 # Run health check
