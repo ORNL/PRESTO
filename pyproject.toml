@@ -9,12 +9,32 @@ exclude = ["tests"]
 [project]
 name = "ornl_presto"
 version = "0.1.28"
-description = "A Python package for privacy preservation algorithm recomendation"
+description = "Automated privacy mechanism selection and optimization for differential privacy"
 readme = "README.md"
 requires-python = ">=3.7"
 license = { file = "LICENSE" }
+keywords = ["differential privacy", "privacy-preserving", "machine learning", "optimization", "bayesian optimization"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Security :: Cryptography",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 authors = [
-  { name = "Olivera Kotevska", email = "kotevskao@ornl.gov" }
+  { name = "Olivera Kotevska", email = "kotevskao@ornl.gov" },
+  { name = "A. Gilad Kusne" },
+  { name = "Prasanna Balaprakash" },
+  { name = "Robert Patton" }
 ]
 dependencies = [
   "torch",
@@ -42,6 +62,10 @@ dev = [
 
 [project.urls]
 Homepage = "https://github.com/ORNL/PRESTO/"
+Repository = "https://github.com/ORNL/PRESTO.git"
+Documentation = "https://github.com/ORNL/PRESTO/tree/main/docs"
+"Bug Tracker" = "https://github.com/ORNL/PRESTO/issues"
+"Paper" = "https://github.com/ORNL/PRESTO/blob/main/paper/paper.md"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

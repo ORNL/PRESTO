@@ -1,21 +1,111 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
+
+# C extensions
+*.so
 
 # Distribution / packaging
+.Python
 build/
+develop-eggs/
 dist/
-*.egg-info/
+downloads/
 .eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
 
 # VSCode
 .vscode/
 
 # MacOS
 .DS_Store
+.AppleDouble
+.LSOverride
 
 # SSH keys - should never be committed
 id_ed25519*
@@ -24,18 +114,20 @@ id_ed25519*
 *_key
 *_key.pub
 
-# Coverage reports
-.coverage
-htmlcov/
-
-# Testing
-.pytest_cache/
-
-# Virtual environments
-.venv/
-venv/
-env/
-
 # IDE
 .idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+temp.png
+.Rhistory
+
+# Project-specific
 PRESTO-v*.zip
+fix_*.py
+create_combined_layout.py
+quickstart_combined.py
+clean_similarity_combined.py

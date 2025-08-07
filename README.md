@@ -8,28 +8,97 @@
 [![JOSS](https://img.shields.io/badge/JOSS-submitted-blue)](https://joss.theoj.org/)
 
 # PRESTO
-PRESTO: Privacy REcommendation and SecuriTy Optimization is a Python package that provides recomendation for the best privacy preservation algorithm based on user preferences. Traditional privacy preservation libraries provide an implementation of a set of algorithms but the user need to experiment and detemine which of them is the best for the given dataset. PRESTO provives recomendation of the top best algorithms and compares all the given algorithms so it is easier for the user to decide.
+PRESTO: Privacy REcommendation and SecuriTy Optimization is a Python package that provides automated recommendations for the best privacy preservation algorithm based on user preferences and data characteristics. Traditional privacy preservation libraries provide implementations of various algorithms but require users to experiment and determine which algorithm is best for their dataset. PRESTO provides intelligent recommendations of the top algorithms and compares all available algorithms, making it easier for users to make informed decisions.
+
+## Statement of Need
+
+Privacy-preserving data analysis has become critical across healthcare, finance, IoT, and research domains. However, existing differential privacy libraries present significant barriers to adoption:
+
+**Current Challenges:**
+- **Expertise Barrier**: Selecting appropriate privacy mechanisms requires deep theoretical knowledge
+- **Parameter Tuning**: Manual trial-and-error to find optimal privacy-utility trade-offs
+- **No Guidance**: Limited automated recommendations for algorithm selection
+- **Uncertainty**: Lack of confidence intervals and reliability metrics
+
+**PRESTO Solution:**
+- **Automated Selection**: Bayesian optimization to find optimal privacy mechanisms and parameters
+- **Data-Driven**: Analyzes dataset characteristics to recommend suitable algorithms
+- **Quantified Uncertainty**: Provides confidence intervals and reliability metrics
+- **Accessible**: Enables both experts and non-experts to deploy privacy-preserving analytics
+- **Extensible**: Modular architecture for integrating new algorithms and metrics
+
+**Target Users:**
+- Data scientists implementing privacy-preserving analytics
+- Researchers requiring compliant data sharing (HIPAA, GDPR)
+- Organizations deploying differential privacy in production
+- Domain experts needing privacy guidance without deep DP knowledge
+
+## Comparison to Existing Tools
+
+PRESTO complements and enhances existing differential privacy libraries:
+
+| Feature | IBM Diffprivlib | Google PyDP | Facebook Opacus | SmartNoise | **PRESTO** |
+|---------|-----------------|-------------|-----------------|------------|------------|
+| Privacy Mechanisms | Yes | Yes | Yes | Yes | Yes |
+| Algorithm Selection | No | No | No | No | Yes |
+| Parameter Optimization | No | No | No | No | Yes |
+| Data-driven Recommendations | No | No | No | No | Yes |
+| Confidence Intervals | No | No | No | No | Yes |
+| Bayesian Optimization | No | No | No | No | Yes |
+| Multi-objective Ranking | No | No | No | No | Yes |
+| Extensible Architecture | Partial | Partial | Partial | Yes | Yes |
+
+**Key Differentiators:**
+- **Automated Decision Making**: PRESTO automatically selects and tunes privacy mechanisms
+- **Statistical Rigor**: Provides confidence intervals and reliability metrics for recommendations
+- **Domain Adaptability**: Analyzes data characteristics to suggest domain-appropriate algorithms
+- **Integration Ready**: Can work alongside existing libraries rather than replacing them
 
 ## Summary
 This package includes functions for:
-- Defines reliability, confidence, and similarity score.
-- Modular solution so new privacy preservation algorithms or privacy preservation library can be easily integrated.
-- Determines the best algorithm, privacy loss, confidence interval, reliability using Bayesian Optimization.
-- Recommends the best privacy preservation algorithms for a given dataset and user requirements.
-- Calculate the privacy-utility, similarity and reliability score.
-- Finds the best privacy preservation and machine learning settings for a given algorithm, dataset, and user requirements.
-- Visualize the top 3 algorithms and their confidence intervals.
-- Visualize the original and private datasets.
-- Visualize the similarity between the datasets and reliability score.
-- Integration with existing privacy preservation libraries (e.g., Opacus) for finding the optimal parameters.
+- Defining reliability, confidence, and similarity scores for privacy mechanisms
+- Providing a modular solution so new privacy preservation algorithms or libraries can be easily integrated
+- Determining the best algorithm, privacy loss, confidence interval, and reliability using Bayesian Optimization
+- Recommending the best privacy preservation algorithms for a given dataset and user requirements
+- Calculating privacy-utility trade-offs, similarity, and reliability scores
+- Finding optimal privacy preservation and machine learning settings for a given algorithm, dataset, and user requirements
+- Visualizing the top 3 algorithms and their confidence intervals
+- Visualizing original and private datasets with similarity analysis
+- Integrating with existing privacy preservation libraries (e.g., Opacus) for finding optimal parameters
 
 ## Installation
+
+### Requirements
+- Python 3.7 or higher
+- PyTorch
+- NumPy, SciPy, Pandas
+- Matplotlib, Seaborn (for visualization)
+- Scikit-learn
+- Bayesian Optimization
+- GPyTorch
+- Opacus (for differential privacy)
+
+### Install from Source
 You can install the package from source:
 
 ```bash
 git clone https://github.com/ORNL/PRESTO.git
-cd presto
+cd PRESTO
 pip install -e .
+```
+
+### Install Dependencies
+To install all dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Verify Installation
+Test your installation:
+
+```bash
+python -c "import ornl_presto; print('PRESTO installed successfully!')"
 ```
 
 ## Quick Start
@@ -69,7 +138,7 @@ top3 = recommend_top3(data, n_evals=5, init_points=3, n_iter=10)
 print("Top-3 recommended privacy algorithms for energy data:")
 for rank, rec in enumerate(top3, start=1):
     print(f"{rank}. {rec['algorithm']} | ε={rec['epsilon']:.2f} | score={rec['score']:.4f} "
-          f"| mean_rmse={rec['mean']:.4f} | ci_width={rec['ci_width']:.4f} | rel={rec['reliability']:.2f}")
+          f"| mean_rmse={rec['mean_rmse']:.4f} | ci_width={rec['ci_width']:.4f} | rel={rec['reliability']:.2f}")
 
 # 4) For each top algorithm, visualize privatized data and similarity metrics
 for rec in top3:
@@ -93,31 +162,51 @@ for rec in top3:
 ```
 
 ## Detailed Examples
-For more examples see the Tutorial folder, there are examples using real-world datasets for electric grid and medical domains.
+For more comprehensive examples, see the `tutorial/` folder and `examples/` directory, which contain examples using real-world datasets for electric grid, medical, and financial domains.
 
 ## Experimental Results
 Top-3 recommended privacy algorithms for energy data:
-1. DP_Exponential | ε=4.87 | score=-0.2798 | mean_rmse=0.2812 | ci_width=0.0283 | rel=125.66
-2. DP_Laplace | ε=4.55 | score=-0.2916 | mean_rmse=0.3155 | ci_width=0.0455 | rel=69.66
-3. DP_Gaussian | ε=4.88 | score=-0.6738 | mean_rmse=0.6944 | ci_width=0.0524 | rel=27.48
+1. exponential | ε=5.00 | score=-0.2689 | mean_rmse=0.2705 | ci_width=0.0201 | rel=96.48
+2. laplace | ε=4.72 | score=-0.2855 | mean_rmse=0.2899 | ci_width=0.0232 | rel=96.20
+3. gaussian | ε=3.85 | score=-0.3156 | mean_rmse=0.3201 | ci_width=0.0298 | rel=89.34
 
-Visualization of original, private, and similarity metrics ![Visualization metrics](images/all_top_dp.png)
+Similarity analysis comparing original data, private data distributions, and metrics: ![Similarity Analysis](images/similarity_analysis_combined.png)
 
 ## API Reference
 
 ### Core Functions
 - `get_noise_generators()`: Returns a dictionary of privacy algorithms.
-- `recommend_top3_mean(data, n_evals=5, init_points=3, n_iter=10)`: Calculate the Top-3 Recommendation via Bayesian Optimization. Sort by mean then by narrower CI.
-- `recommend_top3_reliability(domain, n_evals=3, init_points=2, n_iter=5)`: Calculate the Top-3 Recommendation via Bayesian Optimization. Sort by reliability.
-- `recommend_best_algorithms(data, epsilon, get_noise_generators, calculate_utility_privacy_score, evaluate_algorithm_confidence, performance_explanation_metrics):`: Calculate the best algorithm(s) for privacy, reliability, and similarity.
+- `recommend_top3(data, n_evals=5, init_points=2, n_iter=5)`: Calculate the Top-3 Recommendation via Bayesian Optimization.
+- `recommend_best_algorithms(data, epsilon, ...)`: Calculate the best algorithm(s) for privacy, reliability, and similarity.
 - `evaluate_algorithm_confidence(domain, key, epsilon, n_evals=10, **params)`: Calculate the confidence score.
 - `calculate_utility_privacy_score(domain, key, epsilon, **params)`: Calculate Utility-Privacy Scoring.
-- `performance_explanation_metrics(metrics)`: Calculates the performance explanation metrics: RMSE, Confidence Interval and REliability.
+- `performance_explanation_metrics(metrics)`: Calculates the performance explanation metrics: RMSE, Confidence Interval and Reliability.
 - `visualize_similarity(domain, key, epsilon, **params)`: Visualize similarity using KS Statistic, Jensen–Shannon Divergence, and Pearson Correlation.
 - `visualize_top3(recommendations)`: Visualize Top 3 Privacy Mechanism Recommendations.
 - `visualize_confidence(domain, key, epsilon, n_evals=10, **params)`: Visualize confidence for top algorithm.
 - `visualize_confidence_top3(domain, recommendations, n_evals=10)`: Visualize the Confidence Intervals for Top-3 Mechanisms.
 - `visualize_overlay_original_and_private(domain, top3)`: Visualize overlay Original vs Top-3 Privatized Distributions.
+
+## Community Guidelines
+
+### Contributing
+We welcome contributions from the community! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
+- How to report bugs and request features
+- Development setup and workflow
+- Code style and testing requirements
+- Pull request process
+
+### Getting Help
+- **Documentation**: Check our comprehensive examples in the `tutorial/` and `examples/` directories
+- **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/ORNL/PRESTO/issues)
+- **Discussions**: Join discussions about PRESTO development and usage
+
+### Support
+For support with PRESTO:
+1. Check the documentation and examples first
+2. Search existing [GitHub Issues](https://github.com/ORNL/PRESTO/issues)
+3. Create a new issue with detailed information about your problem
+4. For sensitive issues, contact the maintainers directly
 
 ## License
 

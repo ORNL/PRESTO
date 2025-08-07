@@ -1,5 +1,30 @@
 """
-Visualization functions for PRESTO.
+Visualization functions for PRESTO - Privacy REcommendation and SecuriTy Optimization.
+
+This module provides comprehensive visualization tools for analyzing differential privacy
+mechanisms, comparing algorithm performance, and understanding privacy-utility tradeoffs.
+The visualizations help users make informed decisions about privacy mechanism selection
+and parameter tuning.
+
+Key Features:
+- Data distribution analysis and comparison
+- Privacy mechanism performance visualization
+- Confidence interval and reliability plots
+- Privacy-utility tradeoff exploration
+- Algorithm similarity analysis
+
+Example:
+    >>> import numpy as np
+    >>> from ornl_presto.visualization import visualize_data, visualize_similarity
+    >>>
+    >>> # Visualize original data distribution
+    >>> data = np.random.randn(1000)
+    >>> visualize_data(data, "Original Data Distribution")
+    >>>
+    >>> # Compare algorithm performance
+    >>> algorithms = ['laplace', 'gaussian']
+    >>> epsilons = [0.1, 0.5, 1.0, 2.0]
+    >>> visualize_similarity(data, algorithms, epsilons)
 """
 
 import numpy as np
@@ -7,7 +32,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from .metrics import (
     evaluate_algorithm_confidence,
-    calculate_similarity_score,
     similarity_metrics,
 )
 from .privacy_mechanisms import get_noise_generators
@@ -16,10 +40,39 @@ from .privacy_mechanisms import get_noise_generators
 # Visualize the distribution of the input data
 def visualize_data(domain, title="Data Distribution"):
     """
-    Plot a histogram of the input data.
+    Create a comprehensive visualization of data distribution with histogram and KDE.
+
+    This function provides an overview of the input data's statistical properties
+    through a combined histogram and kernel density estimation (KDE) plot. This
+    visualization is essential for understanding data characteristics before
+    applying differential privacy mechanisms.
+
     Args:
-        domain: Input data (array-like).
-        title: Plot title.
+        domain: Input data to visualize. Can be:
+            - list: Python list of numerical values
+            - np.ndarray: NumPy array of any shape (will be flattened)
+            - torch.Tensor: PyTorch tensor (will be converted to NumPy)
+        title (str, optional): Custom title for the plot. Default is "Data Distribution".
+
+    Returns:
+        None: Displays the plot directly using matplotlib.
+
+    Example:
+        >>> import numpy as np
+        >>> from ornl_presto.visualization import visualize_data
+        >>>
+        >>> # Visualize normal distribution
+        >>> normal_data = np.random.randn(1000)
+        >>> visualize_data(normal_data, "Normal Distribution Sample")
+        >>>
+        >>> # Visualize skewed data
+        >>> skewed_data = np.random.exponential(2, 1000)
+        >>> visualize_data(skewed_data, "Exponential Distribution Sample")
+
+    Note:
+        The plot includes both histogram bars and a smooth KDE curve to show
+        both the empirical distribution and the estimated probability density.
+        Grid lines are added for easier reading of values.
     """
     arr = np.array(domain)
     plt.figure(figsize=(12, 6))
@@ -66,9 +119,7 @@ def visualize_similarity(domain, key, epsilon, **params):
     axes[2].set_ylabel("Score")
     axes[2].set_ylim(0, 1)
     axes[2].grid(axis="y", alpha=0.3)
-    plt.suptitle(
-        f"Similarity Analysis: {key} (ε={epsilon:.4f})", fontsize=16, weight="bold"
-    )
+    plt.suptitle(f"{key} (ε={epsilon:.4f})", fontsize=16, weight="bold")
     plt.tight_layout(rect=[0, 0, 1, 0.95])
     plt.show()
     return metrics

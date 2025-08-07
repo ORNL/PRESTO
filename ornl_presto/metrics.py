@@ -7,25 +7,57 @@ from scipy.stats import ks_2samp, pearsonr, wasserstein_distance
 from scipy.spatial.distance import jensenshannon
 from .privacy_mechanisms import get_noise_generators
 from .utils import flatten_and_shape
-from typing import List, Dict, Any, Tuple, Optional, Union
+from typing import List, Dict, Any
 import torch
 import matplotlib.pyplot as plt
 import seaborn as sns
 from bayes_opt import BayesianOptimization
-import warnings
 from scipy import stats
 
 
 def calculate_utility_privacy_score(domain, key, epsilon, **params):
     """
-    Calculate the negative RMSE between the original and privatized data for a given privacy mechanism.
+    Calculate the utility-privacy score for a given differential privacy mechanism.
+
+    This function evaluates how well a privacy mechanism preserves data utility
+    by computing the negative Root Mean Square Error (RMSE) between original and
+    privatized data. Higher (less negative) scores indicate better utility preservation.
+
     Args:
-        domain: Original data (list, np.ndarray, or torch.Tensor).
-        key: Name of the privacy mechanism.
-        epsilon: Privacy parameter.
-        **params: Additional parameters for the mechanism.
+        domain: Original data to be privatized. Can be:
+            - list: Python list of numerical values
+            - np.ndarray: NumPy array of any shape
+            - torch.Tensor: PyTorch tensor
+        key (str): Name of the privacy mechanism to apply. Available mechanisms
+            include 'laplace', 'gaussian', 'exponential', 'geometric', etc.
+        epsilon (float): Privacy budget parameter. Lower values provide stronger
+            privacy but typically reduce utility. Typical range: 0.01 to 10.0
+        **params: Additional mechanism-specific parameters such as:
+            - delta (float): For (ε,δ)-differential privacy mechanisms
+            - sensitivity (float): Query sensitivity override
+            - clipping_bound (float): For gradient clipping mechanisms
+
     Returns:
-        float: Negative RMSE (higher is better utility).
+        float: Negative RMSE score where:
+            - Values closer to 0 indicate better utility preservation
+            - More negative values indicate greater data distortion
+            - Typical range: -∞ to 0
+
+    Example:
+        >>> import numpy as np
+        >>> data = np.random.randn(100)
+        >>> score = calculate_utility_privacy_score(data, 'laplace', epsilon=1.0)
+        >>> print(f"Utility score: {score:.4f}")
+        Utility score: -0.8234
+
+        >>> # Compare different mechanisms
+        >>> laplace_score = calculate_utility_privacy_score(data, 'laplace', 1.0)
+        >>> gaussian_score = calculate_utility_privacy_score(data, 'gaussian', 1.0, delta=1e-5)
+        >>> print(f"Laplace: {laplace_score:.4f}, Gaussian: {gaussian_score:.4f}")
+
+    Note:
+        This function automatically adapts to the parameter requirements of
+        different privacy mechanisms by inspecting their function signatures.
     """
     data_list, _ = flatten_and_shape(domain)
 
@@ -57,15 +89,50 @@ def calculate_utility_privacy_score(domain, key, epsilon, **params):
 
 def evaluate_algorithm_confidence(domain, key, epsilon, n_evals=10, **params):
     """
-    Evaluate the confidence interval for a privacy mechanism by running multiple utility evaluations.
+    Evaluate the confidence and reliability of a privacy mechanism through repeated testing.
+
+    This function performs multiple independent evaluations of a privacy mechanism
+    to assess the consistency and reliability of its utility preservation. It provides
+    statistical measures including confidence intervals that help users understand
+    the expected range of performance variability.
+
     Args:
-        domain: Original data.
-        key: Name of the privacy mechanism.
-        epsilon: Privacy parameter.
-        n_evals: Number of evaluations to run.
-        **params: Additional parameters for the mechanism.
+        domain: Original data to be privatized. Accepts same formats as
+            calculate_utility_privacy_score().
+        key (str): Name of the privacy mechanism to evaluate (e.g., 'laplace', 'gaussian').
+        epsilon (float): Privacy budget parameter for the mechanism.
+        n_evals (int, optional): Number of independent evaluations to perform.
+            Default is 10. Higher values provide more accurate confidence estimates
+            but increase computation time.
+        **params: Additional mechanism-specific parameters passed to the underlying
+            privacy mechanism.
+
     Returns:
-        dict: Mean, std, CI bounds, CI width, and individual scores.
+        dict: Statistical summary containing:
+            - mean (float): Average utility score across all evaluations
+            - std (float): Standard deviation of utility scores
+            - ci_lower (float): Lower bound of 95% confidence interval
+            - ci_upper (float): Upper bound of 95% confidence interval
+            - ci_width (float): Width of confidence interval (ci_upper - ci_lower)
+            - scores (list): Individual utility scores from each evaluation
+
+    Example:
+        >>> import numpy as np
+        >>> data = np.random.randn(500)
+        >>> confidence = evaluate_algorithm_confidence(data, 'laplace', epsilon=1.0, n_evals=20)
+        >>> print(f"Mean utility: {confidence['mean']:.4f} ± {confidence['std']:.4f}")
+        >>> print(f"95% CI: [{confidence['ci_lower']:.4f}, {confidence['ci_upper']:.4f}]")
+        Mean utility: 0.8234 ± 0.0456
+        95% CI: [0.8030, 0.8438]
+
+        >>> # Narrow confidence intervals indicate consistent performance
+        >>> if confidence['ci_width'] < 0.1:
+        ...     print("Algorithm shows consistent performance")
+
+    Note:
+        The function uses absolute values of utility scores and calculates confidence
+        intervals using the standard normal approximation. Smaller confidence interval
+        widths indicate more consistent mechanism performance.
     """
     scores = [
         abs(calculate_utility_privacy_score(domain, key, epsilon, **params))
@@ -606,16 +673,49 @@ def recommend_top3(
     domain, n_evals: int = 5, init_points: int = 2, n_iter: int = 5
 ) -> List[Dict[str, Any]]:
     """
-    Recommend the top 3 differential privacy algorithms based on performance metrics.
+    Recommend the top 3 differential privacy algorithms based on comprehensive performance metrics.
+
+    This function performs Bayesian optimization to find the optimal epsilon parameter for each
+    available privacy mechanism, then ranks them based on multiple criteria including utility
+    preservation, privacy guarantees, and statistical reliability.
 
     Args:
-        domain: Input data for evaluation
-        n_evals: Number of evaluations per algorithm
-        init_points: Initial points for Bayesian optimization
-        n_iter: Number of optimization iterations
+        domain (array-like): Input dataset for privacy analysis. Can be torch.Tensor,
+                           numpy.ndarray, or list. The data will be used to evaluate
+                           privacy mechanisms and optimize their parameters.
+        n_evals (int, optional): Number of evaluations per algorithm during confidence
+                               assessment. Higher values provide more reliable estimates
+                               but increase computation time. Defaults to 5.
+        init_points (int, optional): Number of initial random points for Bayesian
+                                   optimization exploration. Defaults to 2.
+        n_iter (int, optional): Number of Bayesian optimization iterations for parameter
+                              tuning. Higher values may find better optima but take longer.
+                              Defaults to 5.
 
     Returns:
-        List of top 3 algorithms with their performance metrics
+        List[Dict[str, Any]]: List of top 3 privacy mechanisms ranked by performance,
+                             where each dictionary contains:
+            - 'algorithm' (str): Name of the privacy mechanism
+            - 'epsilon' (float): Optimized privacy parameter (lower = more private)
+            - 'score' (float): Utility-privacy score (higher = better)
+            - 'mean_rmse' (float): Root Mean Square Error between original and private data
+            - 'ci_width' (float): Confidence interval width (lower = more reliable)
+            - 'reliability' (float): Reliability metric (higher = more reliable)
+
+    Example:
+        >>> import torch
+        >>> from ornl_presto import recommend_top3
+        >>> data = torch.randn(1000)  # Sample dataset
+        >>> recommendations = recommend_top3(data, n_evals=10, n_iter=10)
+        >>> best_algorithm = recommendations[0]
+        >>> print(f"Best: {best_algorithm['algorithm']} (ε={best_algorithm['epsilon']:.3f})")
+        >>> print(f"Utility score: {best_algorithm['score']:.3f}")
+
+    Note:
+        - Algorithms are ranked primarily by RMSE (utility preservation), then by epsilon
+          (privacy level), then by confidence interval width (reliability)
+        - The optimization searches for epsilon values in the range [0.1, 5.0]
+        - Lower epsilon values provide stronger privacy guarantees but may reduce utility
     """
     results = []
     NOISE_GENERATORS = get_noise_generators()
