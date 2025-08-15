@@ -146,7 +146,7 @@ Top-3 Recommendations:
 
 ## Multi-Objective Optimization: Pareto Front Analysis
 
-![Pareto front for privacy budget vs accuracy](../images/pareto_front.png){ width=650px float=left }
+![Pareto front for privacy budget vs accuracy](../images/pareto_front.png)
 
 
 # Conclusion
