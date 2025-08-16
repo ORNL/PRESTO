@@ -7,7 +7,7 @@ from ornl_presto import (
     get_noise_generators,
     recommend_top3,
     visualize_data,
-    visualize_similarity
+    visualize_similarity,
 )
 
 # 1) Generate a synthetic energy consumption time series
@@ -39,18 +39,20 @@ top3 = recommend_top3(data, n_evals=5, init_points=3, n_iter=10)
 
 print("\nTop-3 recommended privacy algorithms for energy data:")
 for rank, rec in enumerate(top3, start=1):
-    print(f"{rank}. {rec['algorithm']} | ε={rec['epsilon']:.2f} | score={rec['score']:.4f} "
-          f"| mean_rmse={rec['mean_rmse']:.4f} | ci_width={rec['ci_width']:.4f} | rel={rec['reliability']:.2f}")
+    print(
+        f"{rank}. {rec['algorithm']} | ε={rec['epsilon']:.2f} | score={rec['score']:.4f} "
+        f"| mean_rmse={rec['mean_rmse']:.4f} | ci_width={rec['ci_width']:.4f} | rel={rec['reliability']:.2f}"
+    )
 
 # 4) For each top algorithm, visualize privatized data and similarity metrics
 print("\n4) Analyzing each recommended algorithm...")
 for i, rec in enumerate(top3, start=1):
-    algo = rec['algorithm']
-    eps  = rec['epsilon']
+    algo = rec["algorithm"]
+    eps = rec["epsilon"]
     noise_fn = get_noise_generators()[algo]
 
     print(f"\nAnalyzing algorithm {i}: {algo} (ε={eps:.2f})")
-    
+
     # 1) Generate private data and visualize its distribution
     private = noise_fn(data, eps)
     if not torch.is_tensor(private):
@@ -59,9 +61,7 @@ for i, rec in enumerate(top3, start=1):
 
     # 2) Invoke visualize_similarity with (domain, key, epsilon)
     metrics = visualize_similarity(
-        domain  = data.numpy(),  # pass the raw series
-        key     = algo,
-        epsilon = eps
+        domain=data.numpy(), key=algo, epsilon=eps  # pass the raw series
     )
     print(f"{algo} similarity metrics: {metrics}")
 
