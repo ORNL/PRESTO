@@ -31,13 +31,13 @@ class TestPRESTOConfig:
         privacy_config = PrivacyConfig(
             epsilon_min=0.01,
             epsilon_max=1.0,
-            required_algorithms=["DP_Gaussian"],
+            required_algorithms=["gaussian"],
             utility_threshold=0.9,
         )
 
         assert privacy_config.epsilon_min == 0.01
         assert privacy_config.epsilon_max == 1.0
-        assert privacy_config.required_algorithms == ["DP_Gaussian"]
+        assert privacy_config.required_algorithms == ["gaussian"]
         assert privacy_config.utility_threshold == 0.9
 
 
@@ -61,7 +61,7 @@ class TestConfigManager:
         assert config.privacy.epsilon_min == 0.01
         assert config.privacy.epsilon_max == 1.0
         assert config.privacy.utility_threshold == 0.9
-        assert "DP_Gaussian" in config.privacy.required_algorithms
+        assert "gaussian" in config.privacy.required_algorithms
 
     def test_get_research_config(self):
         """Test getting research configuration."""

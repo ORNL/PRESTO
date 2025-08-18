@@ -27,7 +27,7 @@ class TestUtilityPrivacyScoring:
     def test_calculate_utility_privacy_score_basic(self):
         """Test basic utility privacy score calculation."""
         data = [1.0, 2.0, 3.0]
-        score = calculate_utility_privacy_score(data, "DP_Gaussian", epsilon=1.0)
+        score = calculate_utility_privacy_score(data, "gaussian", epsilon=1.0)
         assert isinstance(score, float)
         assert score < 0
 
@@ -39,7 +39,7 @@ class TestUtilityPrivacyScoring:
         epsilons = [0.1, 1.0, 10.0]
 
         for eps in epsilons:
-            score = calculate_utility_privacy_score(data, "DP_Gaussian", epsilon=eps)
+            score = calculate_utility_privacy_score(data, "gaussian", epsilon=eps)
             scores.append(score)
 
         # Higher epsilon should generally give better utility (less negative score)
@@ -48,7 +48,7 @@ class TestUtilityPrivacyScoring:
     def test_calculate_utility_privacy_score_different_algorithms(self):
         """Test scoring across different privacy algorithms."""
         data = torch.randn(50)
-        algorithms = ["DP_Gaussian", "DP_Laplace", "DP_Exponential"]
+        algorithms = ["gaussian", "laplace", "exponential"]
 
         scores = {}
         for algo in algorithms:
@@ -63,16 +63,16 @@ class TestUtilityPrivacyScoring:
         """Test edge cases for utility scoring."""
         # Very small data
         small_data = [1.0]
-        score = calculate_utility_privacy_score(small_data, "DP_Gaussian", epsilon=1.0)
+        score = calculate_utility_privacy_score(small_data, "gaussian", epsilon=1.0)
         assert isinstance(score, float)
 
         # Large epsilon
         data = torch.randn(20)
-        score = calculate_utility_privacy_score(data, "DP_Gaussian", epsilon=100.0)
+        score = calculate_utility_privacy_score(data, "gaussian", epsilon=100.0)
         assert isinstance(score, float)
 
         # Very small epsilon
-        score = calculate_utility_privacy_score(data, "DP_Gaussian", epsilon=0.01)
+        score = calculate_utility_privacy_score(data, "gaussian", epsilon=0.01)
         assert isinstance(score, float)
 
 
@@ -82,7 +82,7 @@ class TestConfidenceEvaluation:
     def test_evaluate_algorithm_confidence_basic(self):
         """Test basic confidence evaluation."""
         data = [1.0, 2.0, 3.0]
-        res = evaluate_algorithm_confidence(data, "DP_Gaussian", epsilon=1.0, n_evals=3)
+        res = evaluate_algorithm_confidence(data, "gaussian", epsilon=1.0, n_evals=3)
 
         assert "mean" in res and "ci_width" in res
         assert res["mean"] > 0
@@ -98,7 +98,7 @@ class TestConfidenceEvaluation:
 
         for n_evals in [5, 10, 20]:
             res = evaluate_algorithm_confidence(
-                data, "DP_Gaussian", epsilon=1.0, n_evals=n_evals
+                data, "gaussian", epsilon=1.0, n_evals=n_evals
             )
             assert len(res["scores"]) == n_evals
             assert res["mean"] > 0
@@ -112,7 +112,7 @@ class TestConfidenceEvaluation:
         results = []
         for _ in range(3):
             res = evaluate_algorithm_confidence(
-                data, "DP_Gaussian", epsilon=1.0, n_evals=10
+                data, "gaussian", epsilon=1.0, n_evals=10
             )
             results.append(res["mean"])
 
@@ -124,7 +124,7 @@ class TestConfidenceEvaluation:
     def test_evaluate_algorithm_confidence_different_algorithms(self):
         """Test confidence evaluation across algorithms."""
         data = torch.randn(30)
-        algorithms = ["DP_Gaussian", "DP_Laplace"]
+        algorithms = ["gaussian", "laplace"]
 
         for algo in algorithms:
             try:
@@ -489,7 +489,7 @@ class TestIntegrationMetrics:
         data = torch.randn(100)
         epsilon = 1.0
 
-        algorithms = ["DP_Gaussian", "DP_Laplace"]
+        algorithms = ["gaussian", "laplace"]
         algorithm_metrics = {}
 
         for algo in algorithms:
@@ -542,12 +542,12 @@ def sample_private_data(sample_data):
 def test_end_to_end_metrics_pipeline(sample_data, sample_private_data):
     """Test complete metrics calculation pipeline."""
     # Calculate utility-privacy score
-    score = calculate_utility_privacy_score(sample_data, "DP_Gaussian", epsilon=1.0)
+    score = calculate_utility_privacy_score(sample_data, "gaussian", epsilon=1.0)
     assert isinstance(score, float)
 
     # Evaluate confidence
     confidence = evaluate_algorithm_confidence(
-        sample_data, "DP_Gaussian", epsilon=1.0, n_evals=3
+        sample_data, "gaussian", epsilon=1.0, n_evals=3
     )
     assert "mean" in confidence
 
@@ -568,14 +568,14 @@ def test_end_to_end_metrics_pipeline(sample_data, sample_private_data):
 
 def test_calculate_utility_privacy_score():
     data = [1.0, 2.0, 3.0]
-    score = calculate_utility_privacy_score(data, "DP_Gaussian", epsilon=1.0)
+    score = calculate_utility_privacy_score(data, "gaussian", epsilon=1.0)
     assert isinstance(score, float)
     assert score < 0
 
 
 def test_evaluate_algorithm_confidence():
     data = [1.0, 2.0, 3.0]
-    res = evaluate_algorithm_confidence(data, "DP_Gaussian", epsilon=1.0, n_evals=3)
+    res = evaluate_algorithm_confidence(data, "gaussian", epsilon=1.0, n_evals=3)
     assert "mean" in res and "ci_width" in res
     assert res["mean"] > 0
 

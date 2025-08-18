@@ -117,9 +117,6 @@ def test_get_noise_generators():
 
     # Check that all expected mechanisms are present
     expected_keys = [
-        "DP_Gaussian",
-        "DP_Exponential",
-        "DP_Laplace",
         "gaussian",
         "exponential",
         "laplace",
