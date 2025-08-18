@@ -720,6 +720,21 @@ def recommend_top3(
     results = []
     NOISE_GENERATORS = get_noise_generators()
 
+    # Try to get domain config if available
+    try:
+        from ornl_presto.config import ConfigManager
+
+        # Default to 'healthcare' if domain is a torch/numpy array, else use domain string if provided
+        if hasattr(domain, "domain_name"):
+            config = ConfigManager.get_config(domain.domain_name)
+        else:
+            config = ConfigManager.get_config("healthcare")
+        epsilon_min = config.privacy.epsilon_min
+        epsilon_max = config.privacy.epsilon_max
+    except Exception:
+        # Fallback to previous default
+        epsilon_min, epsilon_max = 0.1, 5.0
+
     for key in NOISE_GENERATORS:
         # Objective: maximize negative RMSE (i.e., minimize RMSE)
         def target(epsilon):
@@ -729,9 +744,12 @@ def recommend_top3(
             ]
             return float(np.mean(scores))  # Mean negative RMSE
 
-        # Bayesian Optimization to find best ε in [0.1, 5.0]
+        # Bayesian Optimization to find best ε in [epsilon_min, epsilon_max]
         optimizer = BayesianOptimization(
-            f=target, pbounds={"epsilon": (0.1, 5.0)}, verbose=0, random_state=1
+            f=target,
+            pbounds={"epsilon": (epsilon_min, epsilon_max)},
+            verbose=0,
+            random_state=1,
         )
         optimizer.maximize(init_points=init_points, n_iter=n_iter)
         best = optimizer.max

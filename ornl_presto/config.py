@@ -18,7 +18,7 @@ class PrivacyConfig:
     epsilon_max: float = 10.0
     delta: float = 1e-5
     required_algorithms: List[str] = field(
-        default_factory=lambda: ["DP_Gaussian", "DP_Laplace"]
+        default_factory=lambda: ["gaussian", "laplace"]
     )
     excluded_algorithms: List[str] = field(default_factory=list)
     utility_threshold: float = 0.8  # Minimum acceptable utility preservation
@@ -83,7 +83,7 @@ class ConfigManager:
                 "epsilon_min": 0.01,
                 "epsilon_max": 1.0,
                 "delta": 1e-6,
-                "required_algorithms": ["DP_Gaussian", "DP_Laplace"],
+                "required_algorithms": ["gaussian", "laplace"],
                 "utility_threshold": 0.9,
             },
             "optimization": {"n_evals": 15, "init_points": 5, "n_iter": 25},
@@ -98,7 +98,7 @@ class ConfigManager:
                 "epsilon_min": 0.1,
                 "epsilon_max": 5.0,
                 "delta": 1e-5,
-                "required_algorithms": ["DP_Gaussian", "DP_Laplace", "DP_Exponential"],
+                "required_algorithms": ["gaussian", "laplace", "exponential"],
                 "utility_threshold": 0.85,
             },
             "optimization": {"n_evals": 12, "init_points": 4, "n_iter": 20},
@@ -116,7 +116,7 @@ class ConfigManager:
             "privacy": {
                 "epsilon_min": 1.0,
                 "epsilon_max": 20.0,
-                "required_algorithms": ["DP_Laplace", "count_mean_sketch"],
+                "required_algorithms": ["laplace", "count_mean_sketch"],
                 "utility_threshold": 0.75,
             },
             "data": {
@@ -129,7 +129,7 @@ class ConfigManager:
             "privacy": {
                 "epsilon_min": 0.1,
                 "epsilon_max": 2.0,
-                "required_algorithms": ["DP_Laplace", "rappor", "hadamard_response"],
+                "required_algorithms": ["laplace", "rappor", "hadamard_response"],
                 "utility_threshold": 0.8,
             }
         },
@@ -137,7 +137,7 @@ class ConfigManager:
             "privacy": {
                 "epsilon_min": 1.0,
                 "epsilon_max": 5.0,
-                "required_algorithms": ["DP_Laplace", "DP_Gaussian"],
+                "required_algorithms": ["laplace", "gaussian"],
                 "utility_threshold": 0.8,
             },
             "optimization": {"n_evals": 5, "init_points": 2, "n_iter": 8},

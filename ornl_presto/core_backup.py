@@ -393,21 +393,6 @@ def get_noise_generators():
     """
 
     return {
-        "DP_Gaussian": lambda d, epsilon, **kw: applyDPGaussian(
-            d, delta=kw.get("delta", 1e-5), epsilon=epsilon, gamma=kw.get("gamma", 1)
-        ),
-        "DP_Exponential": lambda d, epsilon, **kw: applyDPExponential(
-            d,
-            sensitivity=kw.get("sensitivity", 1),
-            epsilon=epsilon,
-            gamma=kw.get("gamma", 1.0),
-        ),
-        "DP_Laplace": lambda d, epsilon, **kw: applyDPLaplace(
-            d,
-            sensitivity=kw.get("sensitivity", 1),
-            epsilon=epsilon,
-            gamma=kw.get("gamma", 1),
-        ),
         "SVT_AboveThreshold": lambda d, epsilon, **kw: applySVTAboveThreshold_full(
             d, epsilon
         ),
@@ -416,7 +401,6 @@ def get_noise_generators():
         ),
         "Count_Mean_Sketch": count_mean_sketch,
         "Hadamard_Mechanism": hadamard_mechanism,
-        # 'Hadamard_Response': hadamard_response,  # (commented out; can be enabled if needed)
         "RAPPOR": rappor,
     }
 

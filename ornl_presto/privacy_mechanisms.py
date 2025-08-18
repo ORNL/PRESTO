@@ -233,9 +233,6 @@ def get_noise_generators() -> dict:
         dict: Mapping of mechanism names to their functions.
     """
     return {
-        "DP_Gaussian": applyDPGaussian,
-        "DP_Exponential": applyDPExponential,
-        "DP_Laplace": applyDPLaplace,
         "gaussian": applyDPGaussian,
         "exponential": applyDPExponential,
         "laplace": applyDPLaplace,
