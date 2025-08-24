@@ -53,7 +53,7 @@ def visualize_data(domain, title="Data Distribution"):
             - list: Python list of numerical values
             - np.ndarray: NumPy array of any shape (will be flattened)
             - torch.Tensor: PyTorch tensor (will be converted to NumPy)
-        title (str, optional): Custom title for the plot. 
+        title (str, optional): Custom title for the plot.
             Default is "Data Distribution".
 
     Returns:
