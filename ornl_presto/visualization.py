@@ -113,7 +113,12 @@ def visualize_similarity(domain, key, epsilon, **params):
     axes[1].set_ylabel("Density")
     axes[1].grid(alpha=0.3)
     sns.barplot(
-        x=list(metrics.keys()), y=list(metrics.values()), ax=axes[2], hue=list(metrics.keys()), palette="Blues", legend=False
+        x=list(metrics.keys()),
+        y=list(metrics.values()),
+        ax=axes[2],
+        hue=list(metrics.keys()),
+        palette="Blues",
+        legend=False,
     )
     axes[2].set_title("Similarity Metrics")
     axes[2].set_ylabel("Score")
