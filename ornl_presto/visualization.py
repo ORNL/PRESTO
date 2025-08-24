@@ -89,7 +89,7 @@ def visualize_data(domain, title="Data Distribution"):
 # Visualize similarity metrics between original and privatized data
 def visualize_similarity(domain, key, epsilon, **params):
     """
-    Plot side-by-side histograms and similarity metrics for original and privatized data.
+    Plot side-by-side histograms and similarity metrics for original and private data.
     Args:
         domain: Input data.
         key: Name of the privacy mechanism.
@@ -140,7 +140,8 @@ def visualize_top3(recommendations):
         recommendations: List of recommendation dicts.
     """
     labels = [
-        f"{r['algorithm']}\nε={r['epsilon']:.2f}\nmean={r['mean']:.2f}\nwidth={r['ci_width']:.2f}"
+        f"{r['algorithm']}\nε={r['epsilon']:.2f}\n"
+        f"mean={r['mean']:.2f}\nwidth={r['ci_width']:.2f}"
         for r in recommendations
     ]
     scores = [r["score"] for r in recommendations]
