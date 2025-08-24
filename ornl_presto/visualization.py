@@ -1,10 +1,11 @@
 """
 Visualization functions for PRESTO - Privacy REcommendation and SecuriTy Optimization.
 
-This module provides comprehensive visualization tools for analyzing differential privacy
-mechanisms, comparing algorithm performance, and understanding privacy-utility tradeoffs.
-The visualizations help users make informed decisions about privacy mechanism selection
-and parameter tuning.
+This module provides comprehensive visualization tools for analyzing differential
+privacy mechanisms, comparing algorithm performance, and understanding privacy-utility
+tradeoffs.
+The visualizations help users make informed decisions about privacy mechanism
+selection and parameter tuning.
 
 Key Features:
 - Data distribution analysis and comparison
@@ -52,7 +53,8 @@ def visualize_data(domain, title="Data Distribution"):
             - list: Python list of numerical values
             - np.ndarray: NumPy array of any shape (will be flattened)
             - torch.Tensor: PyTorch tensor (will be converted to NumPy)
-        title (str, optional): Custom title for the plot. Default is "Data Distribution".
+        title (str, optional): Custom title for the plot. 
+            Default is "Data Distribution".
 
     Returns:
         None: Displays the plot directly using matplotlib.
