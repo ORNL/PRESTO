@@ -2,7 +2,7 @@
 Utility functions for PRESTO differential privacy operations.
 """
 
-from typing import Union, List, Tuple, Any
+from typing import Union, List
 import numpy as np
 import torch
 

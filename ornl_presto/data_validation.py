@@ -23,18 +23,18 @@ class DataValidator:
     def __init__(self, min_size: int = 10, max_size: int = 1000000):
         self.min_size = min_size
         self.max_size = max_size
-        self.validation_results = {}
+        self.validation_results: Dict[str, Any] = {}
 
     def validate_data(self, data: ArrayLike) -> Dict[str, Any]:
         """Perform comprehensive data validation."""
 
         # Convert to numpy for analysis
         if torch.is_tensor(data):
-            np_data = data.cpu().numpy()
+            np_data = data.cpu().numpy() if hasattr(data, "cpu") else np.array(data)
         else:
             np_data = np.array(data)
 
-        results = {
+        results: Dict[str, Any] = {
             "valid": True,
             "warnings": [],
             "errors": [],
@@ -108,56 +108,68 @@ class DataValidator:
             try:
                 stat, p_value = stats.shapiro(data[:5000])  # Limit for performance
                 if p_value > 0.05:
-                    results["recommendations"].append(
-                        "Data appears normally distributed - "
-                        "Gaussian mechanism recommended"
-                    )
+                    if isinstance(results["recommendations"], list):
+                        results["recommendations"].append(
+                            "Data appears normally distributed - "
+                            "Gaussian mechanism recommended"
+                        )
                 else:
-                    results["recommendations"].append(
-                        "Data is not normally distributed - "
-                        "consider Laplace or Exponential mechanisms"
-                    )
+                    if isinstance(results["recommendations"], list):
+                        results["recommendations"].append(
+                            "Data is not normally distributed - "
+                            "consider Laplace or Exponential mechanisms"
+                        )
             except Exception:
-                results["warnings"].append("Could not perform normality test")
+                if isinstance(results["warnings"], list):
+                    results["warnings"].append("Could not perform normality test")
 
         # Distribution characteristics
         skew = results["statistics"]["skewness"]
         if abs(skew) > 1:
             if skew > 1:
-                results["recommendations"].append(
-                    "Right-skewed data detected - Exponential mechanism may work well"
-                )
+                if isinstance(results["recommendations"], list):
+                    results["recommendations"].append(
+                        "Right-skewed data detected - "
+                        "Exponential mechanism may work well"
+                    )
             else:
-                results["recommendations"].append(
-                    "Left-skewed data detected - consider data transformation"
-                )
+                if isinstance(results["recommendations"], list):
+                    results["recommendations"].append(
+                        "Left-skewed data detected - consider data transformation"
+                    )
 
         # Kurtosis analysis
         kurt = results["statistics"]["kurtosis"]
         if kurt > 3:
-            results["warnings"].append(
-                "Heavy-tailed distribution detected - "
-                "outliers may affect privacy mechanisms"
-            )
+            if isinstance(results["warnings"], list):
+                results["warnings"].append(
+                    "Heavy-tailed distribution detected - "
+                    "outliers may affect privacy mechanisms"
+                )
         elif kurt < -1:
-            results["warnings"].append(
-                "Light-tailed distribution detected - "
-                "may have limited natural variation"
-            )
+            if isinstance(results["warnings"], list):
+                results["warnings"].append(
+                    "Light-tailed distribution detected - "
+                    "may have limited natural variation"
+                )
 
         # Variance analysis
         cv = results["statistics"]["coefficient_of_variation"]
         if cv > 2:
-            results["warnings"].append(
-                "High coefficient of variation - data has high relative variability"
-            )
-            results["recommendations"].append(
-                "Consider robust scaling before privacy analysis"
-            )
+            if isinstance(results["warnings"], list):
+                results["warnings"].append(
+                    "High coefficient of variation - data has high relative variability"
+                )
+            if isinstance(results["recommendations"], list):
+                results["recommendations"].append(
+                    "Consider robust scaling before privacy analysis"
+                )
         elif cv < 0.1:
-            results["warnings"].append(
-                "Low coefficient of variation - data may have limited natural variation"
-            )
+            if isinstance(results["warnings"], list):
+                results["warnings"].append(
+                    "Low coefficient of variation - "
+                    "data may have limited natural variation"
+                )
 
     def _detect_outliers(self, data: np.ndarray, results: Dict[str, Any]):
         """Detect outliers using multiple methods."""
@@ -245,7 +257,11 @@ class DataPreprocessor:
 
         # Convert to numpy
         if torch.is_tensor(data):
-            np_data = data.cpu().numpy().copy()
+            np_data = (
+                data.cpu().numpy().copy()
+                if hasattr(data, "cpu")
+                else np.array(data).copy()
+            )
         else:
             np_data = np.array(data, dtype=np.float32).copy()
 
@@ -408,36 +424,43 @@ def recommend_preprocessing_strategy(data: ArrayLike) -> Dict[str, Any]:
     # Outlier handling recommendation
     if stats.get("outlier_percentage_iqr", 0) > 5:
         recommendations["handle_outliers"] = True
-        recommendations["rationale"].append("High outlier rate detected")
+        if isinstance(recommendations["rationale"], list):
+            recommendations["rationale"].append("High outlier rate detected")
 
         if stats.get("outlier_percentage_iqr", 0) > 15:
             recommendations["outlier_method"] = "isolation_forest"
-            recommendations["rationale"].append(
-                "Very high outlier rate - using isolation forest"
-            )
+            if isinstance(recommendations["rationale"], list):
+                recommendations["rationale"].append(
+                    "Very high outlier rate - using isolation forest"
+                )
 
     # Transformation recommendation
-    if abs(stats.get("skewness", 0)) > 1:  # Reduced threshold for easier testing
-        if stats["min"] > 0:
+    if abs(stats.get("skewness", 0)) > 1:
+        if stats.get("min", 0) > 0:
             recommendations["transformation"] = "log"
-            recommendations["rationale"].append(
-                "High skewness with positive values - log transformation recommended"
-            )
+            if isinstance(recommendations["rationale"], list):
+                recommendations["rationale"].append(
+                    "High skewness with positive values - "
+                    "log transformation recommended"
+                )
         else:
             recommendations["transformation"] = "sqrt"
-            recommendations["rationale"].append(
-                "High skewness - sqrt transformation recommended"
-            )
+            if isinstance(recommendations["rationale"], list):
+                recommendations["rationale"].append(
+                    "High skewness - sqrt transformation recommended"
+                )
 
     # Scale recommendation
     if stats.get("coefficient_of_variation", 0) > 2:
-        recommendations["rationale"].append(
-            "High variability - standardization strongly recommended"
-        )
+        if isinstance(recommendations["rationale"], list):
+            recommendations["rationale"].append(
+                "High variability - standardization strongly recommended"
+            )
     elif stats.get("range", 0) > 1000:
-        recommendations["rationale"].append(
-            "Large data range - standardization recommended"
-        )
+        if isinstance(recommendations["rationale"], list):
+            recommendations["rationale"].append(
+                "Large data range - standardization recommended"
+            )
 
     return recommendations
 

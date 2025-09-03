@@ -168,28 +168,32 @@ class ConfigManager:
         predefined = cls.PREDEFINED_CONFIGS[config_name]
 
         # Update privacy settings
-        if "privacy" in predefined:
+        if "privacy" in predefined and isinstance(predefined["privacy"], dict):
             for key, value in predefined["privacy"].items():
                 setattr(config.privacy, key, value)
 
         # Update optimization settings
-        if "optimization" in predefined:
+        if "optimization" in predefined and isinstance(
+            predefined["optimization"], dict
+        ):
             for key, value in predefined["optimization"].items():
                 setattr(config.optimization, key, value)
 
         # Update data settings
-        if "data" in predefined:
+        if "data" in predefined and isinstance(predefined["data"], dict):
             for key, value in predefined["data"].items():
                 setattr(config.data, key, value)
 
         # Update visualization settings
-        if "visualization" in predefined:
+        if "visualization" in predefined and isinstance(
+            predefined["visualization"], dict
+        ):
             for key, value in predefined["visualization"].items():
                 setattr(config.visualization, key, value)
 
         # Update top-level settings
         for key in ["random_seed", "verbose", "parallel_workers", "gpu_acceleration"]:
-            if key in predefined:
+            if isinstance(predefined, dict) and key in predefined:
                 setattr(config, key, predefined[key])
 
         return config

@@ -1,3 +1,10 @@
+build
+dist
+docs
+examples
+htmlcov
 images
 ornl_presto
+paper
+tools
 tutorial

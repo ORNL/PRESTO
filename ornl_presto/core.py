@@ -10,10 +10,9 @@ import numpy as np
 import gpytorch
 from opacus import PrivacyEngine
 from bayes_opt import BayesianOptimization
-from sklearn.model_selection import train_test_split
-from torch.utils.data import DataLoader, TensorDataset
+from torch.utils.data import DataLoader
 
-from .utils import numpy_to_list, _to_tensor
+from .utils import _to_tensor
 
 
 class ExactGPModel(gpytorch.models.ExactGP):
@@ -235,7 +234,12 @@ def dp_pareto_front(x1, x2, model_class, X_test, train_dataset, y_test):
             for grad_norm in x2:
                 # Calculate utility (negative MSE)
                 utility = dp_target(
-                    noise_mult, grad_norm, model_class, X_test, train_dataset, y_test
+                    noise_mult,
+                    grad_norm,
+                    model_class,
+                    X_test,
+                    train_dataset,
+                    y_test,
                 )
 
                 # Privacy level is inversely related to noise multiplier

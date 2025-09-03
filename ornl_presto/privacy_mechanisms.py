@@ -2,7 +2,7 @@
 Differential privacy mechanisms for PRESTO.
 """
 
-from typing import Union, List, Tuple, Any
+from typing import Union, List
 import numpy as np
 import torch
 import random
@@ -87,7 +87,7 @@ def applyDPLaplace(
 # Helper for Sparse Vector Technique (SVT)
 def above_threshold_SVT(
     val: float, domain_list: List[float], T: float, epsilon: float
-) -> bool:
+) -> float:
     """
     Helper function for SVT: returns value if above noisy threshold, else random value.
     """
