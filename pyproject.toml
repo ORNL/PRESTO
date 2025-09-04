@@ -8,7 +8,7 @@ exclude = ["tests"]
 
 [project]
 name = "ornl_presto"
-version = "0.1.28"
+version = "0.1.29"
 description = "Automated privacy mechanism selection and optimization for differential privacy"
 readme = "README.md"
 requires-python = ">=3.7"
