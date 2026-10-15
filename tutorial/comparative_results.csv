@@ -1,0 +1,5 @@
+domain,top_algorithms
+genomic,"alg_genomic_1, alg_genomic_2, alg_genomic_3"
+clinical,"alg_clinical_1, alg_clinical_2, alg_clinical_3"
+ehr,"alg_ehr_1, alg_ehr_2, alg_ehr_3"
+biomarker,"alg_biomarker_1, alg_biomarker_2, alg_biomarker_3"

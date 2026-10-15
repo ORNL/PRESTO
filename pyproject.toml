@@ -1,0 +1,149 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["tests"]
+
+[project]
+name = "ornl_presto"
+version = "0.1.29"
+description = "Automated privacy mechanism selection and optimization for differential privacy"
+readme = "README.md"
+requires-python = ">=3.7"
+license = { file = "LICENSE" }
+keywords = ["differential privacy", "privacy-preserving", "machine learning", "optimization", "bayesian optimization"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Security :: Cryptography",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+authors = [
+  { name = "Olivera Kotevska", email = "kotevskao@ornl.gov" },
+  { name = "A. Gilad Kusne" },
+  { name = "Prasanna Balaprakash" },
+  { name = "Robert Patton" }
+]
+dependencies = [
+  "torch",
+  "numpy",
+  "seaborn",
+  "pandas",
+  "scipy",
+  "matplotlib",
+  "bayesian-optimization",
+  "gpytorch",
+  "scikit-learn",
+  "opacus"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "pytest-cov>=4.0",
+  "black>=23.0",
+  "flake8>=6.0",
+  "mypy>=1.0",
+  "pre-commit>=3.0",
+  "build>=0.10.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/ORNL/PRESTO/"
+Repository = "https://github.com/ORNL/PRESTO.git"
+Documentation = "https://github.com/ORNL/PRESTO/tree/main/docs"
+"Bug Tracker" = "https://github.com/ORNL/PRESTO/issues"
+"Paper" = "https://github.com/ORNL/PRESTO/blob/main/paper/paper.md"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--disable-warnings"
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | build
+  | dist
+)/
+'''
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E203", "W503"]
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    ".eggs",
+    "*.egg-info",
+    ".venv"
+]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = false
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
+no_implicit_optional = false
+warn_redundant_casts = true
+warn_unused_ignores = false
+warn_no_return = false
+warn_unreachable = false
+strict_equality = false
+ignore_missing_imports = true
+exclude = [
+    "ornl_presto/core_backup.py",
+    "ornl_presto/core_cleaned.py"
+]
+
+[tool.coverage.run]
+source = ["ornl_presto"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/core_backup.py",
+    "*/core_cleaned.py"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:"
+]
