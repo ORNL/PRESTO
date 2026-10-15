@@ -4,7 +4,7 @@
 [![Coverage](https://img.shields.io/badge/coverage-81%25-brightgreen)](https://github.com/ORNL/PRESTO)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![DOI](https://img.shields.io/badge/DOI-pending-yellow)](https://doi.org/pending)
+[![DOI](https://img.shields.io/badge/DOI-10.11578%2Fdc.20261015.1-blue)](https://doi.org/10.11578/dc.20261015.1)
 [![JOSS](https://img.shields.io/badge/JOSS-submitted-blue)](https://joss.theoj.org/)
 
 # PRESTO
@@ -224,6 +224,7 @@ If you use PRESTO in your research, please cite the software:
   title = {PRESTO: Privacy REcommendation and SecuriTy Optimization},
   version = {2.0.5},
   date = {2025-07-11},
+  doi = {10.11578/dc.20261015.1},
   url = {https://github.com/ORNL/PRESTO}
 }
 ```
